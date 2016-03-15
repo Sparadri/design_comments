@@ -16,6 +16,18 @@ gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'simple_form'
 gem 'autoprefixer-rails'
+gem 'faker', '~> 1.6', '>= 1.6.1'
+
+# react / rails
+gem 'js-routes'
+gem 'react-rails', '1.6.1'
+gem 'momentjs-rails', '~> 2.11'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-classnames'
+  gem 'rails-assets-react-dom'
+end
+
 
 group :development, :test do
   gem 'binding_of_caller'
@@ -24,8 +36,6 @@ group :development, :test do
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'spring'
-  
-  
 end
 
 group :production do

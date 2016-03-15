@@ -2,3 +2,82 @@
  * CSS code specific to home page
  * (margin/padding adjustments)
  * ------------------------------------- */
+
+.background-color {
+  background-color: $gray-lighter;
+}
+
+.avatar-lg {
+  width: 50px;
+}
+.avatar-md {
+  width: 40px;
+}
+.avatar-xs {
+  width: 30px;
+}
+
+.avatar-bordered {
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  border: white 1px solid;
+  box-shadow: 1px 2px #EAEAEA;
+}
+.avatar-circle {
+  border-radius: 50%;
+}
+.avatar-square {
+  border-radius: 3px;
+}
+
+
+.message-item-card {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 3px 3px 0px 0px;
+}
+
+.message-item-header {
+  display: flex;
+  flex-flow: row;
+  height: 40px;        // why do i need to specify height?
+  & .details {
+    padding-left: 10px;
+    display: flex;
+    flex-flow: column;
+  }
+  & .name {
+    color: $gray-dark;
+    font-weight: 500;
+  }
+  & .time {
+    color: $gray-light;
+    font-weight: 300;
+    font-size: 0.8em;
+  }
+}
+
+.message-item-content {
+  padding: 10px 0px;
+}
+
+.message-item-social {
+  border-top: 1px solid $gray-lighter;
+  font-size: 0.90em;
+  color: $gray;
+  padding: 5px 0px;
+  display: flex;
+  flex-flow: row;
+  & .social-item {
+    padding: 0px 5px;
+    &:hover {
+      color: black;
+      cursor: pointer;
+    }
+  }
+}
+
+textArea:hover {
+
+}
+
