@@ -16,13 +16,58 @@ var App = React.createClass({
 });
 
 var CreatePost = React.createClass({
+  getInitialState() {
+      return {
+        focused: false
+      };
+  },
+  handleKeyUp: function(e) {
+    var inputValue = this.refs.createPost.value;
+    var keyPressed = e.which;
+    console.log(keyPressed);
+    console.log(inputValue);
+  },
+  handleClick: function() {
+    this.setState({
+      focused: true
+    })
+  },
+  handleDiscardClick: function() {
+    this.setState({
+      focused: false    // NOT WORKING???
+    })
+  },
   render: function() {
-    var textStyle = {
-      width: '100%'
-    };
+    CreatePostClasses = classNames({
+      "create-post": true
+    });
+    textareaClasses = classNames({
+      "text-area": true,
+      "focused": this.state.focused
+    });
+    shareButton = classNames({
+      "share-button": true,
+    });
+    discardButton = classNames({
+      "discard-message": true,
+    });
+    createPostControls = classNames({
+      "create-post-controls": true,
+      "hidden": !this.state.focused
+    });
+    // maxlength
+    // minlength
+    // placeholder
+    // required (boolean)
+    // spellcheck (boolean)
     return (
-      <div>
-        <textArea style={textStyle}> </textArea>
+      <div className={CreatePostClasses} onClick={this.handleClick}>
+        <textArea placeholder="Express Your Opinion..." className={textareaClasses} maxLength="40" ref="createPost" onKeyUp={this.handleKeyUp}>
+        </textArea>
+          <div className={createPostControls}>
+            <div className={discardButton} onClick={this.handleDiscardClick}><i className="fa fa-trash"></i></div>
+            <div className={shareButton}> Share now </div>
+          </div>
       </div>
     );
   }
@@ -107,7 +152,7 @@ var MessageItemSocial = React.createClass({
           fb_share: this.props.fb_share
       };
   },
-  handleSocialClick: function(topic){
+  handleSocialClick: function(){
     this.setState({
       isClicked: true
     });
@@ -115,15 +160,17 @@ var MessageItemSocial = React.createClass({
   render: function() {
     return (
       <div className="message-item-social">
-        <div className="social-item" ref="likes">
-          <i className="fa fa-thumbs-up"></i>
-          <span> Like </span>
-          <span> {this.state.likes}     </span>
-        </div>
-        <div className="social-item" ref="dislikes" onClick={this.handleSocialClick}>
-          <i className="fa fa-thumbs-down"></i>
-          <span> Dislike </span>
-          <span> {this.state.dislikes}  </span>
+        <div className="inside-interactions">
+          <div className="social-item" ref="likes">
+            <i className="fa fa-thumbs-up"></i>
+            <span> Like </span>
+            <span> {this.state.likes} </span>
+          </div>
+          <div className="social-item" ref="dislikes" onClick={this.handleSocialClick}>
+            <i className="fa fa-thumbs-down"></i>
+            <span> Dislike </span>
+            <span> {this.state.dislikes} </span>
+          </div>
         </div>
         <div className="social-item">
           <i className="fa fa-reply-all"></i>
@@ -133,7 +180,7 @@ var MessageItemSocial = React.createClass({
         <div className="social-item">
           <i className="fa fa-share-alt"></i>
           <span> Share </span>
-          <span> {this.state.fb_share}  </span>
+          <span> {this.state.fb_share} </span>
         </div>
       </div>
     )
