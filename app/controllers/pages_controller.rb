@@ -7,9 +7,8 @@ class PagesController < ApplicationController
     @full_comments = []
 
     @comments.each do |comment|
-      replies = []
-      @replies.select { |reply| comment == reply.comment }
-      hash = {comment: comment, replies: @replies}
+      replies = @replies.select { |reply| comment.id == reply.comment_id }
+      hash = {comment: comment, replies: replies}
       @full_comments << hash
     end
 

@@ -14,7 +14,6 @@ var App = React.createClass({
     );
   }
 });
-
 var CreatePost = React.createClass({
   getInitialState() {
       return {
@@ -28,7 +27,8 @@ var CreatePost = React.createClass({
     console.log(text)
   },
   handleClick: function() {
-    var quill = new Quill('#editor');
+    var editorId = "#"+this.refs.createPost.id
+    var quill = new Quill(editorId);
     quill.addModule('toolbar', { container: '#post-toolbar' });
     console.log(quill+' added');
     this.setState({
@@ -39,7 +39,8 @@ var CreatePost = React.createClass({
   handleDiscardClick: function() {
     this.setState({
       focused: false    // NOT WORKING???
-    })
+    });
+    this.state.quill.setContents([]);
   },
   render: function() {
     AddPostClasses = classNames({
@@ -76,10 +77,9 @@ var CreatePost = React.createClass({
         </div>
         <div className={CreatePostClasses}>
           <div
-            id="editor"
+            id={"editor"+Math.round(Math.random()*10000)}
             placeholder="Express Your Opinion..."
             className={textareaClasses}
-            maxLength="40"
             ref="createPost"
             onKeyUp={this.handleKeyUp}>
         </div>
