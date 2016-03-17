@@ -59,8 +59,6 @@ GEM
       sprockets (>= 3.5.2)
     builder (3.2.2)
     byebug (8.2.2)
-    ckeditor_rails (4.5.3)
-      railties (>= 3.0)
     coderay (1.1.1)
     coffee-script-source (1.10.0)
     concurrent-ruby (1.0.1)
@@ -137,6 +135,7 @@ GEM
       railties (= 4.2.5.1)
       sprockets-rails
     rails-assets-classnames (2.2.3)
+    rails-assets-quill (0.20.1)
     rails-assets-react-dom (0.1.0)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
@@ -206,7 +205,6 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   browserify-rails
-  ckeditor_rails (~> 4.5, >= 4.5.3)
   devise
   faker (~> 1.6, >= 1.6.1)
   figaro
@@ -222,6 +220,7 @@ DEPENDENCIES
   quiet_assets
   rails (= 4.2.5.1)
   rails-assets-classnames!
+  rails-assets-quill!
   rails-assets-react-dom!
   rails_12factor
   react-rails (= 1.6.1)

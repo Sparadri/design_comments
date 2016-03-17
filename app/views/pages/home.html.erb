@@ -4,3 +4,13 @@
 
 <%= react_component "App",
           render(template: 'pages/home.json.jbuilder') %>
+
+
+
+
+<%= content_for(:after_js) do %>
+<script>
+  $(document).ready(function(){
+  })
+</script>
+<% end %>

@@ -23,11 +23,11 @@ gem 'js-routes'
 gem 'react-rails', '1.6.1'
 gem 'momentjs-rails', '~> 2.11'
 gem "browserify-rails"
-gem 'ckeditor_rails', '~> 4.5', '>= 4.5.3'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
   gem 'rails-assets-react-dom'
+  gem 'rails-assets-quill'
 end
 
 
