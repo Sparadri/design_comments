@@ -8,6 +8,7 @@
 
 User.destroy_all
 Comment.destroy_all
+Reply.destroy_all
 
 # creates users
 10.times do
@@ -28,7 +29,7 @@ Comment.destroy_all
     # p user_dislikes
 
   # creates comments
-  (1..5).to_a.sample.times do
+  (1..2).to_a.sample.times do
     comment = Comment.create(
       content: Faker::Lorem.sentence(3, true),
       user_id: user.id,
@@ -37,7 +38,20 @@ Comment.destroy_all
       dislike_count: (0..50).to_a.sample,
       fb_share_count: (0..10).to_a.sample
     )
-    p "#{user.first_name}'s message: #{comment.content} is created"
+    p "#{comment.user.first_name}'s message: #{comment.content} is created"
+
+    (0..1).to_a.sample.times do
+      reply = Reply.create(
+        content: Faker::Lorem.sentence(3, true),
+        user: User.all.sample,
+        comment: Comment.all.sample,
+        created_at: Faker::Time.between(DateTime.now - 10, DateTime.now),
+        like_count: (0..5).to_a.sample,
+        dislike_count: (0..5).to_a.sample,
+        fb_share_count: (0..2).to_a.sample
+      )
+      p "#{reply.user.first_name}'s reply: #{comment.content} is created"
+    end
   end
 end
 

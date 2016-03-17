@@ -64,18 +64,23 @@
 
 .message-item-social {
   border-top: 1px solid $gray-lighter;
-  font-size: 0.90em;
-  color: $gray;
+  font-size: 0.85em;
+  color: $gray-light;
   padding: 5px 0px;
   display: flex;
   flex-flow: row;
   justify-content: space-between;
+  letter-spacing: 0.5px;
   .inside-interactions {
     display: flex;
     flex-flow: row;
   }
+  .dislike {
+        margin-left: 20px;
+  }
   & .social-item {
     padding: 0px 5px;
+    width: 100px;
     &:hover {
       color: black;
       cursor: pointer;
@@ -89,10 +94,13 @@ textarea {
   &:active {
     border: none;
     outline: none;
+    height: 200px;
+    border-bottom: 1px solid $gray-lighter;
   }
   &:focus {
     border: none !important;
     outline: none;
+    border-bottom: 1px solid $gray-lighter;
   }
 }
 
@@ -105,21 +113,25 @@ textarea {
     padding: 10px;
     background-color: white;
     cursor: pointer;
+    color: #B1A9A9;
   .text-area {
     border: none;
     width: 100%;
+    height: 30px;
+    cursor:text;
     &.focused {
       height: 200px;
       border: none;
       border-bottom: 1px solid $gray-lighter;
+      color: $gray-darker;
     }
   }
 }
 .create-post-controls {
   display: flex;
   flex-flow: row;
-  justify-content: flex-end;
-  padding: 0px 10px;
+  justify-content: space-between;
+  padding: 10px 10px 0px 10px;
   .share-button {
     background-color: #4285f4;
     color: #fff;
@@ -141,5 +153,128 @@ textarea {
     font-size: 25px;
     padding: 0px 20px;
   }
+  .left-toolbar {
+    display: flex;
+    flex-flow: row;
+  }
+  #post-toolbar {
+    display: flex;
+    flex-flow: row;
+    padding: 10px;
+    .toolbar-item {
+      padding: 0px 10px;
+      color: $gray-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        cursor: pointer;
+        color: $gray-darker;
+      }
+    }
+    .separator {
+      box-sizing: border-box;
+      background-color: #ddd;
+      display: inline-block;
+      height: 14px;
+      margin-left: 4px;
+      margin-right: 4px;
+      vertical-align: middle;
+      width: 1px;
+    }
+  }
+}
 
+
+
+
+.is-liked {
+  color: $blue;
+  font-weight: 500;
+  &:hover {
+    color: $blue-dark !important;
+  }
+}
+.is-disliked {
+  color: $red;
+  font-weight: 500;
+  &:hover {
+    color: $red-dark !important;
+  }
+}
+
+
+.reply-item-header {
+  padding: 5px 0px;
+  margin: 10px 0px;
+  font-size: 0.9em;
+  display: flex;
+  flex-flow: row;
+  height: 40px;        // why do i need to specify height?
+  & .details {
+    align-self: flex-start;
+    display: flex;
+    flex-flow: row;
+    align-items: flex-end;
+  }
+  & .name {
+    color: $gray-dark;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  & .time {
+    margin-left: 10px;
+    color: $gray-light;
+    font-weight: 300;
+    font-size: 0.8em;
+  }
+  &:hover .reply-social-item {
+    transform: scale(1.2);
+  }
+}
+.reply-content {
+  padding-left: 10px;
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+}
+.reply-content-message {
+}
+.reply-social-items {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  color: $gray-lighter;
+  font-size: 0.9em;
+  i {
+    font-size: 1.2em;
+  }
+}
+.reply-social-item {
+  padding: 0px 10px;
+  transition: all .2s ease;
+  &:hover {
+    color: black;
+    cursor: pointer;
+  }
+}
+
+.reply-form {
+  margin: 0px -10px -10px -10px;
+  .create-post {
+    border-radius: 0px 0px 3px 3px;
+    background-color: #FDFDFD;
+    border: none;
+    border-top: 1px solid $gray-lighter;
+    &:hover {
+      background-color: white;
+      border-top: 1px solid #DAD8D8;
+      cursor: text;
+    }
+  }
+}
+.reply-list-top-border {
+  width: 100%;
+  height: 2px;
+  background-color: $gray-lighter;
 }
