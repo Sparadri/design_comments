@@ -1,12 +1,18 @@
 var App = React.createClass({
+  mixins: [React.addons.LinkedStateMixin],
+  getInitialState() {
+      return {
+        comments: this.props.comments
+      };
+  },
   render: function() {
     return (
       <div className="background-color">
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-8 col-md-offset-2">
-              <CreatePost />
-              <MessagesList comments={this.props.comments}/>
+              <CreatePost linkState={this.linkState}/>
+              <MessagesList comments={this.state.comments} linkState={this.linkState}/>
             </div>
           </div>
         </div>
@@ -20,11 +26,15 @@ var CreatePost = React.createClass({
         focused: false
       };
   },
+  handleSubmit: function(){
+    var html = this.state.quill.getHTML();
+    console.log(html);
+  },
   handleKeyUp: function(e) {
     var text = this.state.quill.getText();
     var keyPressed = e.which;
     console.log(keyPressed);
-    console.log(text)
+    console.log(text);
   },
   handleClick: function() {
     var editorId = "#"+this.refs.createPost.id
@@ -111,7 +121,7 @@ var CreatePost = React.createClass({
             </div>
             <div className="left-toolbar">
             <div className={discardButton} onClick={this.handleDiscardClick}><i className="fa fa-trash"></i></div>
-            <div className={shareButton}> Share now </div>
+            <div className={shareButton} onClick={this.handleSubmit}> Share now </div>
             </div>
           </div>
         </div>
@@ -121,16 +131,18 @@ var CreatePost = React.createClass({
 });
 
 var MessagesList = React.createClass({
+  renderMessageItem: function(key){
+    var comments = this.props.comments;
+    return (
+      <div key={key} className="message-item-card">
+        <MessageItem comment={comments[key].comment} user={comments[key].user} replies={comments[key].replies || {}}/>
+      </div>
+    )
+  },
   render: function() {
     return (
       <div>
-      { this.props.comments.map(function(comment, index) {
-        return (
-          <div key={index} className="message-item-card">
-            <MessageItem comment={comment.comment.content} user={comment.comment.user} replies={comment.comment.replies}/>
-          </div>
-        )
-      })}
+        {Object.keys(this.props.comments).map(this.renderMessageItem)}
       </div>
     );
   }
@@ -142,7 +154,11 @@ var MessageItem = React.createClass({
       <div>
         <MessageItemHeader avatar_url={this.props.user.avatar_url} created_at={this.props.comment.created_at} user={this.props.user}/>
         <MessageItemContent content={this.props.comment.content} />
-        <MessageItemSocial likes={this.props.comment.like_count} dislikes={this.props.comment.dislike_count} fb_share={this.props.comment.fb_share_count} />
+        <MessageItemSocial
+          like_count={this.props.comment.like_count}
+          dislike_count={this.props.comment.dislike_count}
+          fb_share_count={this.props.comment.fb_share_count}
+          reply_count={Object.keys(this.props.replies).length} />
         <MessageReplyList replies={this.props.replies}/>
         <ReplyForm />
       </div>
@@ -151,17 +167,19 @@ var MessageItem = React.createClass({
 });
 
 var MessageReplyList = React.createClass({
+  renderMessageReplies: function(key) {
+    var replies = this.props.replies;
+    return (
+      <div key={key}>
+         <MessageReplies comment={replies[key].comment} user={replies[key].user} />
+      </div>
+    )
+  },
   render: function() {
     return (
       <div>
         <div className="reply-list-top-border"></div>
-        { this.props.replies.map(function(reply, index) {
-          return (
-            <div key={index}>
-             <MessageReplies comment={reply.content} user={reply.user} />
-            </div>
-          )
-        })}
+        {Object.keys(this.props.replies).map(this.renderMessageReplies)}
       </div>
     )
   }
@@ -311,10 +329,11 @@ var MessageItemSocial = React.createClass({
   getInitialState() {
     return {
         isLiked: false,
-        likes: this.props.likes,
+        likes: this.props.like_count,
         isDisliked: false,
-        dislikes: this.props.dislikes,
-        fb_share: this.props.fb_share
+        dislikes: this.props.dislike_count,
+        fb_share: this.props.fb_share_count,
+        replies: this.props.reply_count
     };
   },
   handleLike: function(){
@@ -383,7 +402,7 @@ var MessageItemSocial = React.createClass({
         <div className="social-item">
           <i className="fa fa-reply-all"></i>
           <span> Replies </span>
-          <span> </span>
+          <span> {this.state.replies} </span>
         </div>
         <div className="social-item">
           <i className="fa fa-share-alt"></i>
