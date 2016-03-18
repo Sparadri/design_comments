@@ -22,7 +22,6 @@ gem 'faker', '~> 1.6', '>= 1.6.1'
 gem 'js-routes'
 gem 'react-rails', '1.6.1'
 gem 'momentjs-rails', '~> 2.11'
-gem "browserify-rails"
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
