@@ -9,6 +9,15 @@
 User.destroy_all
 Comment.destroy_all
 
+User.create(
+  first_name: Faker::Name.first_name,
+  last_name: Faker::Name.last_name,
+  email: 'adrien@mail.com',
+  password: '00000000',
+  avatar_url: "http://lorempixel.com/200/200/people/#{(0..10).to_a.sample}/",
+  rating: (1..100).to_a.sample
+)
+
 # creates users
 10.times do
   user = User.create(

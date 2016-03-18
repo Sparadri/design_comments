@@ -1,8 +1,15 @@
 Rails.application.routes.draw do
+  get 'comments/create'
+
+  get 'comments/update'
+
   devise_for :users
   root to: 'pages#home'
   get '/home', to: 'pages#home'
   get '/test', to: 'pages#test'
+
+  resources :comments, only: [:create, :update]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

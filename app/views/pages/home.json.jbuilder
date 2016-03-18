@@ -1,3 +1,4 @@
+json.current_user current_user, :id, :first_name, :rating, :avatar_url if user_signed_in?
 json.set! :comments do
   @full_comments.each do |full_comment|
     json.set! full_comment[:comment].id.to_s do
@@ -14,7 +15,6 @@ json.set! :comments do
     end
   end
 end
-
 
 # json.comments do
 #   json.array! @full_comments do |full_comment|
