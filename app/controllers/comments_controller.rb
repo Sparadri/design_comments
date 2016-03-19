@@ -21,7 +21,7 @@ class CommentsController < ApplicationController
 
 end
 
-
+# CSS TRANSITION
 # on modif / post message, should be able to see it live
 # ...this.props > tu pass tous les composants à ton enfant
 # TO CHECK KEEP IN MEMORY WHETHER USER HAS VOTED !!!!

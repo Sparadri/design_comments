@@ -23,6 +23,8 @@ gem 'js-routes'
 gem 'react-rails', '1.6.1'
 gem 'momentjs-rails', '~> 2.11'
 
+gem 'acts_as_votable', '~> 0.10.0'
+
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
   gem 'rails-assets-react-dom'
