@@ -55,8 +55,10 @@ User.create(
       p "#{reply.user.first_name}'s reply: #{reply.content} is created"
     end
   end
-  50.times do
+  (0..10).to_a.sample.times do
     Comment.all.sample.liked_by User.all.sample
+  end
+  (0..10).to_a.sample.times do
     Comment.all.sample.disliked_by User.all.sample
   end
 end

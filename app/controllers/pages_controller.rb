@@ -69,8 +69,6 @@ class PagesController < ApplicationController
       content: comment.content,
       created_at: comment.created_at,
       is_editable: is_editable,
-      like_count: comment.like_count,
-      dislike_count: comment.dislike_count,
       fb_share_count: comment.fb_share_count }
   end
 
@@ -93,11 +91,11 @@ class PagesController < ApplicationController
     dislike_voters_info = get_voters_id(dislike_voters)
     votes = {
       like_count: like_count,
-      is_liked: like_voters_info[:has_interacted],
-      is_disliked: dislike_voters_info[:has_interacted],
-      dislike_count: like_count,
       like_voters: like_voters_info[:ids],
-      dislike_voters: dislike_voters_info[:ids]
+      is_liked: like_voters_info[:has_interacted],
+      dislike_count: dislike_count,
+      dislike_voters: dislike_voters_info[:ids],
+      is_disliked: dislike_voters_info[:has_interacted]
     }
   end
 
