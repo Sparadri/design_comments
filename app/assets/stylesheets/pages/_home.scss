@@ -137,30 +137,33 @@ textarea {
     }
   }
 }
+// should not be nested, needed for modal
+.share-button {
+  background-color: #4285f4;
+  color: #fff;
+  box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
+  cursor: pointer;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  padding: 5px 10px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  &:hover {
+    background-color: #3973D2;
+    color: $gray-lighter;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.12), 1px 2px 4px rgba(0, 0, 0, 0.24);
+  }
+}
+
+
 .create-post-controls {
   display: flex;
   flex-flow: row;
   justify-content: space-between;
   padding: 10px 10px 0px 10px;
-  .share-button {
-    background-color: #4285f4;
-    color: #fff;
-    box-shadow: 0 0 2px rgba(0,0,0,.12),0 2px 4px rgba(0,0,0,.24);
-    cursor: pointer;
-    text-transform: uppercase;
-    font-size: 0.9em;
-    padding: 5px 10px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    &:hover {
-      background-color: #3973D2;
-      color: $gray-lighter;
-      box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.12), 1px 2px 4px rgba(0, 0, 0, 0.24);
-    }
-  }
   .hidden {
     display: none;
   }
@@ -282,7 +285,7 @@ textarea {
 }
 
 .reply-form {
-  margin: 0px -10px -10px -10px;
+  margin: -5px -10px -10px -10px;
   .create-post {
     border-radius: 0px 0px 3px 3px;
     background-color: #FDFDFD;
@@ -308,4 +311,33 @@ textarea {
 .messagesList-appear.messagesList-appear-active {
   opacity: 1;
   transition: opacity .5s ease-in;
+}
+
+
+.modal-review {
+  text-align: center;
+  color: $gray;
+  .close {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    color: $gray;
+  }
+  .gray-divider {
+    width: 100%;
+    margin: 40px 0px;
+    height: 2px;
+    background-color: $gray-lighter;
+  }
+  h3 {
+    letter-spacing: 0.6px;
+  }
+  .modal-message-content {
+    height: 200px;
+    background-color: $gray-lighter;
+    margin: 20px 0px;
+  }
+}
+.full-width {
+  width: 100%;
 }

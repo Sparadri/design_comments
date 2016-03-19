@@ -21,15 +21,25 @@ class CommentsController < ApplicationController
 
 end
 
+
+# linkState to work :)
+# show only some messages & view more on click
+# add messages counter as person scrolling
+# do ajax call for likes
+# add medium editor & / or redactor-js & medium-insert on rails assets
+# componentWillMount for animation css comment pluggin loading
+# fix time / hours
+# add picture when person types his message (or when review?)
+# add sponsored comment example?
+
+# issue of likes / dislikes not working when replying
+# display first + highlight post from a specific user
 # CSS TRANSITION
 # on modif / post message, should be able to see it live
 # ...this.props > tu pass tous les composants à ton enfant
 # TO CHECK KEEP IN MEMORY WHETHER USER HAS VOTED !!!!
 # should i use library has_voted????
-# add medium editor & / or redactor-js & medium-insert on rails assets
-# fix time / hours !!
 # on click else where disable & clear editing!!! with
-# add picture when person types his message
 
 
 # private method to retrieve element of DOM

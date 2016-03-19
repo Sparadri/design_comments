@@ -22,7 +22,6 @@ gem 'faker', '~> 1.6', '>= 1.6.1'
 gem 'js-routes'
 gem 'react-rails', '1.6.1'
 gem 'momentjs-rails', '~> 2.11'
-gem 'rails-assets-react-modal'
 
 gem 'acts_as_votable', '~> 0.10.0'
 
@@ -30,6 +29,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'
   gem 'rails-assets-react-dom'
   gem 'rails-assets-quill'
+  gem 'rails-assets-react-modal'
 end
 
 

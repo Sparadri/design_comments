@@ -1,9 +1,11 @@
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 var AppTest = React.createClass({
-  mixins: [React.addons.LinkedStateMixin],
+  mixins : [LinkedStateMixin],
   getInitialState() {
     return {
-      comments: this.props.comments
+      comments: this.props.comments,
+      modalIsOpen: false,
+      currentComment: "hello"
     };
   },
   addComment: function(data){
@@ -18,7 +20,8 @@ var AppTest = React.createClass({
       comments[parentId].replies[id] = {comment: data, user: user, votes:{}, replies: {}};
     };
     this.setState({
-      comments: comments
+      comments: comments,
+      modalIsOpen: true
     });
   },
   render: function() {
@@ -27,9 +30,21 @@ var AppTest = React.createClass({
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-8 col-md-offset-2">
-              <CreatePost linkState={this.linkState} parentCommentId={null} addComment={this.addComment}/>
-              <ReactCSSTransitionGroup transitionName="messagesList" transitionAppear={true} transitionAppearTimeout={500}>
-                <MessagesList addComment={this.addComment} comments={this.state.comments} linkState={this.linkState}/>
+              <ModalInt
+                isOpen          = {this.state.modalIsOpen}
+                currentComment  = {this.state.currentComment}
+                valueLink       = {this.props.valueLink} />
+              <CreatePost
+                parentCommentId = {null}
+                valueLink       = {this.linkState('currentComment')}
+                addComment      = {this.addComment} />
+              <ReactCSSTransitionGroup
+                transitionName    = "messagesList"
+                transitionAppear  = {true}
+                transitionAppearTimeout={500}>
+                <MessagesList
+                  addComment  = {this.addComment}
+                  comments    = {this.state.comments} />
               </ReactCSSTransitionGroup>
             </div>
           </div>
@@ -38,6 +53,75 @@ var AppTest = React.createClass({
     );
   }
 });
+
+var ModalInt = React.createClass({
+  getInitialState() {
+    return {
+      modalIsOpen: this.props.isOpen
+    };
+  },
+  componentWillReceiveProps(newProps){
+    if (newProps.isOpen == true) {
+      this.openModal();
+    };
+  },
+  openModal: function() {
+    this.setState({modalIsOpen: true});
+  },
+  closeModal: function() {
+    this.setState({modalIsOpen: false});
+    // this.state.modalIsOpen
+  },
+  renderModalContent: function() {
+    return(
+      <div className="modal-review">
+        <i className="close fa fa-times" onClick={this.closeModal}></i>
+        <h3 className="">Review your post before it goes live!</h3>
+        <div className="gray-divider"></div>
+        <div className="modal-message-content">Message Content Here</div>
+        <div className="share-button full-width" >VALIDATE & SHARE</div>
+      </div>
+    )
+  },
+  render: function(){
+    const modalStyling = {
+      overlay : {
+        position          : 'fixed',
+        top               : 0,
+        left              : 0,
+        right             : 0,
+        bottom            : 0,
+        backgroundColor   : 'rgba(255, 255, 255, 0.75)'
+      },
+      content : {
+        position                   : 'absolute',
+        top                        : '40px',
+        left                       : '500px',
+        right                      : '500px',
+        bottom                     : '40px',
+        border                     : '1px solid #ccc',
+        background                 : '#fff',
+        overflow                   : 'auto',
+        WebkitOverflowScrolling    : 'touch',
+        borderRadius               : '4px',
+        outline                    : 'none',
+        padding                    : '20px'
+      }
+    };
+    return(
+      <div>
+        <ReactModal
+            isOpen          = {this.state.modalIsOpen}
+            onRequestClose  = {this.closeModal}
+            closeTimeoutMS  = {100}
+            style           = {modalStyling} >
+            {this.renderModalContent()}
+        </ReactModal>
+      </div>
+    )
+  }
+});
+
 var CreatePost = React.createClass({
   getInitialState() {
       return {
@@ -66,8 +150,9 @@ var CreatePost = React.createClass({
   handleKeyUp: function(e) {
     var text = this.state.quill.getText();
     var keyPressed = e.which;
+    this.setState({currentComment: text})
     console.log(keyPressed);
-    console.log(text);
+    console.log(this.state.currentComment);
   },
   handleClick: function() {
     var editorId = "#"+this.refs.createPost.id
@@ -87,16 +172,16 @@ var CreatePost = React.createClass({
   },
   render: function() {
     AddPostClasses = classNames({
-      "create-post": !this.state.focused,
-      "hidden": this.state.focused
+      "create-post" : !this.state.focused,
+      "hidden"      :  this.state.focused
     });
     CreatePostClasses = classNames({
-      "create-post": this.state.focused,
-      "hidden": !this.state.focused
+      "create-post" : this.state.focused,
+      "hidden"      : !this.state.focused
     });
     textareaClasses = classNames({
-      "text-area": true,
-      "focused": this.state.focused
+      "text-area" : true,
+      "focused"   : this.state.focused
     });
     shareButton = classNames({
       "share-button": true,
@@ -153,7 +238,9 @@ var CreatePost = React.createClass({
               </div>
             </div>
             <div className="left-toolbar">
-            <div className={discardButton} onClick={this.handleDiscardClick}><i className="fa fa-trash"></i></div>
+            <div className={discardButton} onClick={this.handleDiscardClick}>
+              <i className="fa fa-trash"></i>
+            </div>
             <div className={shareButton} onClick={this.handleSubmit}> Share now </div>
             </div>
           </div>
@@ -168,7 +255,12 @@ var MessagesList = React.createClass({
     var comments = this.props.comments;
     return (
       <div key={key} className="message-item-card">
-        <MessageItem addComment={this.props.addComment} votes={comments[key].votes} comment={comments[key].comment} user={comments[key].user} replies={comments[key].replies || {}}/>
+        <MessageItem
+          addComment={this.props.addComment}
+          votes={comments[key].votes}
+          comment={comments[key].comment}
+          user={comments[key].user}
+          replies={comments[key].replies || {}}/>
       </div>
     )
   },
@@ -185,7 +277,11 @@ var MessageItem = React.createClass({
   render: function() {
     return (
       <div>
-        <MessageItemHeader comment={this.props.comment} created_at={this.props.comment.created_at} user={this.props.user} avatar_url={this.props.user.avatar_url}/>
+        <MessageItemHeader
+          comment={this.props.comment}
+          created_at={this.props.comment.created_at}
+          user={this.props.user}
+          avatar_url={this.props.user.avatar_url}/>
         <MessageItemContent content={this.props.comment.content} />
         <MessageItemSocial
           like_count={this.props.votes.like_count}
@@ -195,7 +291,9 @@ var MessageItem = React.createClass({
           isDisliked={this.props.votes.is_Disliked}
           reply_count={Object.keys(this.props.replies).length} />
         <MessageReplyList replies={this.props.replies}/>
-        <ReplyForm addComment={this.props.addComment} parentCommentId={this.props.comment.id} />
+        <ReplyForm
+          addComment={this.props.addComment}
+          parentCommentId={this.props.comment.id} />
       </div>
     );
   }
@@ -206,14 +304,20 @@ var MessageReplyList = React.createClass({
     var replies = this.props.replies;
     return (
       <div key={key}>
-         <MessageReplies votes={replies[key].votes} comment={replies[key].comment} user={replies[key].user} />
+         <MessageReplies
+          votes={replies[key].votes}
+          comment={replies[key].comment}
+          user={replies[key].user} />
       </div>
     )
   },
   render: function() {
+    ReplyListTopBorder = classNames({
+      "reply-list-top-border": Object.keys(this.props.replies).length > 0
+    });
     return (
       <div>
-        <div className="reply-list-top-border"></div>
+        <div className={ReplyListTopBorder}></div>
         {Object.keys(this.props.replies).map(this.renderMessageReplies)}
       </div>
     )
@@ -343,7 +447,9 @@ var MessageItemHeader = React.createClass({
           <div className="name"> {this.props.user.first_name} </div>
           <div className="time"> {this.computeTime(this.props.created_at)} </div>
         </div>
-        <EditMessage messageId={this.props.comment.id} isEditable={this.props.comment.is_editable}/>
+        <EditMessage
+          messageId={this.props.comment.id}
+          isEditable={this.props.comment.is_editable}/>
       </div>
     )
   }
@@ -477,7 +583,9 @@ var ReplyForm = React.createClass({
   render: function() {
     return (
       <div className="reply-form">
-        <CreatePost addComment={this.props.addComment} parentCommentId={this.props.parentCommentId} />
+        <CreatePost
+          addComment={this.props.addComment}
+          parentCommentId={this.props.parentCommentId} />
       </div>
     )
   }
