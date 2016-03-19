@@ -6,6 +6,7 @@
 //= require react_ujs
 //= require react-dom
 //= require react-libraries
+//= require react-modal
 //= require moment
 //= require draft
 //= require components

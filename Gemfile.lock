@@ -135,6 +135,7 @@ GEM
     rails-assets-classnames (2.2.3)
     rails-assets-quill (0.20.1)
     rails-assets-react-dom (0.1.0)
+    rails-assets-react-modal (0.6.1)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -220,6 +221,7 @@ DEPENDENCIES
   rails-assets-classnames!
   rails-assets-quill!
   rails-assets-react-dom!
+  rails-assets-react-modal
   rails_12factor
   react-rails (= 1.6.1)
   redis
