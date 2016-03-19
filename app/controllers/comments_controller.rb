@@ -27,7 +27,9 @@ end
 # TO CHECK KEEP IN MEMORY WHETHER USER HAS VOTED !!!!
 # should i use library has_voted????
 # add medium editor & / or redactor-js & medium-insert on rails assets
-
+# fix time / hours !!
+# on click else where disable & clear editing!!! with
+# add picture when person types his message
 
 
 # private method to retrieve element of DOM

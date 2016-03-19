@@ -1,3 +1,4 @@
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 var AppTest = React.createClass({
   mixins: [React.addons.LinkedStateMixin],
   getInitialState() {
@@ -12,9 +13,9 @@ var AppTest = React.createClass({
     var parent    = data.parent_comment_id;
     var parentId  = data.parent_comment_id;
     if (parent == null) {
-      comments[id] = {comment: data, user: user, replies: {}};
+      comments[id] = {comment: data, user: user, replies: {}, votes: {}};
     } else {
-      comments[parentId].replies[id] = {comment: data, user: user, replies: {}};
+      comments[parentId].replies[id] = {comment: data, user: user, votes:{}, replies: {}};
     };
     this.setState({
       comments: comments
@@ -27,7 +28,9 @@ var AppTest = React.createClass({
           <div className="row">
             <div className="col-xs-12 col-md-8 col-md-offset-2">
               <CreatePost linkState={this.linkState} parentCommentId={null} addComment={this.addComment}/>
-              <MessagesList addComment={this.addComment} comments={this.state.comments} linkState={this.linkState}/>
+              <ReactCSSTransitionGroup transitionName="messagesList" transitionAppear={true} transitionAppearTimeout={500}>
+                <MessagesList addComment={this.addComment} comments={this.state.comments} linkState={this.linkState}/>
+              </ReactCSSTransitionGroup>
             </div>
           </div>
         </div>
@@ -182,7 +185,7 @@ var MessageItem = React.createClass({
   render: function() {
     return (
       <div>
-        <MessageItemHeader created_at={this.props.comment.created_at} user={this.props.user} avatar_url={this.props.user.avatar_url}/>
+        <MessageItemHeader comment={this.props.comment} created_at={this.props.comment.created_at} user={this.props.user} avatar_url={this.props.user.avatar_url}/>
         <MessageItemContent content={this.props.comment.content} />
         <MessageItemSocial
           like_count={this.props.votes.like_count}
@@ -318,7 +321,6 @@ var MessageReplies = React.createClass({
 });
 
 var MessageItemHeader = React.createClass({
-
   computeTime: function(timestamp) {
     var nbHours = moment(timestamp).startOf("hour").fromNow();
     if (nbHours < 1) {                      // less than 1 hr ago
@@ -333,7 +335,6 @@ var MessageItemHeader = React.createClass({
       return ( moment(timestamp).format('LL') )
     };
   },
-
   render: function() {
     return (
       <div className="message-item-header">
@@ -342,6 +343,32 @@ var MessageItemHeader = React.createClass({
           <div className="name"> {this.props.user.first_name} </div>
           <div className="time"> {this.computeTime(this.props.created_at)} </div>
         </div>
+        <EditMessage messageId={this.props.comment.id} isEditable={this.props.comment.is_editable}/>
+      </div>
+    )
+  }
+});
+
+var EditMessage = React.createClass({
+  renderEdit: function() {
+    if (this.props.isEditable) {
+      return (
+        <div>
+          <i className="fa fa-trash"></i>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <i className="fa fa-ban"></i>
+        </div>
+      )
+    };
+  },
+  render: function() {
+    return (
+      <div className="edit-message">
+        {this.renderEdit()}
       </div>
     )
   }
