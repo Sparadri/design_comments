@@ -22,8 +22,13 @@ class CommentsController < ApplicationController
 end
 
 
-# linkState to work :)
+
+# CHECK DISCOURSE TEXT INPUTS
+# RECUPERER DU CODE DISCOURSE!!!
+# exemple locales: https://github.com/discourse/discourse/blob/9f30a28a8e850ff3e35d7ed240687d987d33e197/config/locales/client.fr.yml
+
 # show only some messages & view more on click
+# linkState to work :)
 # add messages counter as person scrolling
 # do ajax call for likes
 # add medium editor & / or redactor-js & medium-insert on rails assets
@@ -40,6 +45,67 @@ end
 # TO CHECK KEEP IN MEMORY WHETHER USER HAS VOTED !!!!
 # should i use library has_voted????
 # on click else where disable & clear editing!!! with
+
+
+
+
+
+# accepted_answer: false
+# actions_summary: [{id: 2, can_act: true}, {id: 3, can_act: true}, {id: 4, can_act: true},…]
+# admin: false
+# avatar_template: "/user_avatar/try.discourse.org/mcwumbly/{size}/284_1.png"
+# avg_time: 1
+# can_accept_answer: false
+# can_delete: false
+# can_edit: false
+# can_recover: false
+# can_unaccept_answer: false
+# can_view_edit_history: true
+# can_wiki: false
+# cooked: "<p>bag iPhone </p>↵↵<p> tofu Distillery Vice chips trade cray +1 hoodie booth irony party literally </p>↵↵<p> butcher Schlitz Squid Austin</p>"
+# created_at: "2014-08-26T17:04:45.787Z"
+# deleted_at: null
+# display_username: "David McClure"
+# edit_reason: null
+# hidden: false
+# hidden_reason_id: null
+# id: 1622
+# incoming_link_count: 0
+# moderator: false
+# name: "David McClure"
+# post_number: 22
+# post_type: 1
+# primary_group_name: null
+# quote_count: 0
+# raw: "bag iPhone ↵↵ tofu Distillery Vice chips trade cray +1 hoodie booth irony party literally ↵↵ butcher Schlitz Squid Austin"
+# reads: 5
+# reply_count: 0
+# reply_to_post_number: null
+# score: 0.85
+# staff: false
+# topic_id: 301
+# topic_slug: "what-happens-when-a-topic-has-over-1000-replies"
+# trust_level: 1
+# updated_at: "2014-08-26T17:04:45.787Z"
+# user_deleted: false
+# user_id: 70
+# user_title: null
+# username: "mcwumbly"
+# version: 1
+# wiki: false
+# yours: false
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # private method to retrieve element of DOM

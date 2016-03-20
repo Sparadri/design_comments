@@ -87,8 +87,8 @@ class PagesController < ApplicationController
     dislike_count    = comment.get_dislikes.size
     like_voters      = comment.get_likes.voters
     dislike_voters   = comment.get_dislikes.voters
-    like_voters_info    = get_voters_id(like_voters)
     dislike_voters_info = get_voters_id(dislike_voters)
+    like_voters_info    = get_voters_id(like_voters)
     votes = {
       like_count: like_count,
       like_voters: like_voters_info[:ids],
@@ -103,7 +103,7 @@ class PagesController < ApplicationController
     voters_hash = {}
     voters_ids  = []
     voters.each { |voter| voters_ids << voter.id }
-    voters.include? current_user ? has_interacted = true : has_interacted = false
+    voters.include?(current_user) ? has_interacted = true : has_interacted = false
     voters_hash = {ids: voters_ids, has_interacted: has_interacted}
   end
 end

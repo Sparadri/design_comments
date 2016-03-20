@@ -78,7 +78,7 @@ var ModalInt = React.createClass({
         <i className="close fa fa-times" onClick={this.closeModal}></i>
         <h3 className="">Review your post before it goes live!</h3>
         <div className="gray-divider"></div>
-        <div className="modal-message-content">Message Content Here</div>
+        <div className="modal-message-content">{this.state.currentComment}</div>
         <div className="share-button full-width" >VALIDATE & SHARE</div>
       </div>
     )
@@ -96,8 +96,8 @@ var ModalInt = React.createClass({
       content : {
         position                   : 'absolute',
         top                        : '40px',
-        left                       : '500px',
-        right                      : '500px',
+        left                       : '25%',
+        right                      : '25%',
         bottom                     : '40px',
         border                     : '1px solid #ccc',
         background                 : '#fff',
@@ -256,11 +256,11 @@ var MessagesList = React.createClass({
     return (
       <div key={key} className="message-item-card">
         <MessageItem
-          addComment={this.props.addComment}
-          votes={comments[key].votes}
-          comment={comments[key].comment}
-          user={comments[key].user}
-          replies={comments[key].replies || {}}/>
+          addComment= {this.props.addComment}
+          votes     = {comments[key].votes}
+          comment   = {comments[key].comment}
+          user      = {comments[key].user}
+          replies   = {comments[key].replies || {}}/>
       </div>
     )
   },
@@ -278,22 +278,22 @@ var MessageItem = React.createClass({
     return (
       <div>
         <MessageItemHeader
-          comment={this.props.comment}
-          created_at={this.props.comment.created_at}
-          user={this.props.user}
-          avatar_url={this.props.user.avatar_url}/>
+          comment     = {this.props.comment}
+          created_at  = {this.props.comment.created_at}
+          user        = {this.props.user}
+          avatar_url  = {this.props.user.avatar_url}/>
         <MessageItemContent content={this.props.comment.content} />
         <MessageItemSocial
-          like_count={this.props.votes.like_count}
-          dislike_count={this.props.votes.dislike_count}
-          fb_share_count={this.props.comment.fb_share_count}
-          isLiked={this.props.votes.is_liked}
-          isDisliked={this.props.votes.is_Disliked}
-          reply_count={Object.keys(this.props.replies).length} />
+          likeCount      = {this.props.votes.like_count}
+          dislikeCount   = {this.props.votes.dislike_count}
+          fbShareCount   = {this.props.comment.fb_share_count}
+          isLiked        = {this.props.votes.is_liked}
+          isDisliked     = {this.props.votes.is_disliked}
+          replyCount     = {Object.keys(this.props.replies).length} />
         <MessageReplyList replies={this.props.replies}/>
         <ReplyForm
-          addComment={this.props.addComment}
-          parentCommentId={this.props.comment.id} />
+          addComment      = {this.props.addComment}
+          parentCommentId = {this.props.comment.id} />
       </div>
     );
   }
@@ -305,9 +305,9 @@ var MessageReplyList = React.createClass({
     return (
       <div key={key}>
          <MessageReplies
-          votes={replies[key].votes}
-          comment={replies[key].comment}
-          user={replies[key].user} />
+          votes   = {replies[key].votes}
+          comment = {replies[key].comment}
+          user    = {replies[key].user} />
       </div>
     )
   },
@@ -327,20 +327,20 @@ var MessageReplyList = React.createClass({
 var MessageReplies = React.createClass({
   getInitialState() {
     return {
-        isLiked: this.props.votes.is_liked,
-        likes: this.props.votes.like_count,
+        isLiked   : this.props.votes.is_liked,
+        likes     : this.props.votes.like_count,
         isDisliked: this.props.votes.is_disliked,
-        dislikes: this.props.votes.dislike_count,
-        fb_share: this.props.comment.fb_share_count
+        dislikes  : this.props.votes.dislike_count,
+        fb_share  : this.props.comment.fb_share_count
     };
   },
   handleLike: function(){
     if (this.state.isLiked == false && this.state.isDisliked == true) {
       this.setState({
-        isLiked: true,
-        likes: this.state.likes + 1,
+        isLiked   : true,
+        likes     : this.state.likes + 1,
         isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        dislikes  : this.state.dislikes - 1
       });
     } else if (this.state.isLiked == false) {
       this.setState({
@@ -357,10 +357,10 @@ var MessageReplies = React.createClass({
   handleDislike: function(){
     if (this.state.isDisliked == false && this.state.isLiked == true) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1,
-        isLiked: false,
-        likes: this.state.likes - 1
+        isDisliked  : true,
+        dislikes    : this.state.dislikes + 1,
+        isLiked     : false,
+        likes       : this.state.likes - 1
       });
     } else if (this.state.isDisliked == false) {
       this.setState({
@@ -448,8 +448,8 @@ var MessageItemHeader = React.createClass({
           <div className="time"> {this.computeTime(this.props.created_at)} </div>
         </div>
         <EditMessage
-          messageId={this.props.comment.id}
-          isEditable={this.props.comment.is_editable}/>
+          messageId   = {this.props.comment.id}
+          isEditable  = {this.props.comment.is_editable}/>
       </div>
     )
   }
@@ -493,62 +493,62 @@ var MessageItemContent = React.createClass({
 var MessageItemSocial = React.createClass({
   getInitialState() {
     return {
-        isLiked: this.props.is_liked,
-        likes: this.props.like_count,
-        isDisliked: this.props.is_disliked,
-        dislikes: this.props.dislike_count,
-        fb_share: this.props.fb_share_count,
-        replies: this.props.reply_count
+        isLiked      : this.props.isLiked,
+        likeCount    : this.props.likeCount,
+        isDisliked   : this.props.isDisliked,
+        dislikeCount : this.props.dislikeCount,
+        fbShareCount : this.props.fbShareCount,
+        replyCount   : this.props.replyCount
     };
   },
   handleLike: function(){
     if (this.state.isLiked == false && this.state.isDisliked == true) {
       this.setState({
-        isLiked: true,
-        likes: this.state.likes + 1,
+        isLiked   : true,
+        likeCount     : this.state.likeCount + 1,
         isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        dislikeCount  : this.state.dislikeCount - 1
       });
     } else if (this.state.isLiked == false) {
       this.setState({
         isLiked: true,
-        likes: this.state.likes + 1
+        likeCount: this.state.likeCount + 1
       });
     } else {
       this.setState({
         isLiked: false,
-        likes: this.state.likes - 1
+        likeCount: this.state.likeCount - 1
       });
     }
   },
   handleDislike: function(){
     if (this.state.isDisliked == false && this.state.isLiked == true) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1,
-        isLiked: false,
-        likes: this.state.likes - 1
+        isDisliked    : true,
+        dislikeCount  : this.state.dislikeCount + 1,
+        isLiked       : false,
+        likeCount     : this.state.likeCount - 1
       });
     } else if (this.state.isDisliked == false) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1
+        isDisliked  : true,
+        dislikeCount: this.state.dislikeCount + 1
       });
     } else {
       this.setState({
-        isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        isDisliked  : false,
+        dislikeCount: this.state.dislikeCount - 1
       });
     }
   },
   render: function() {
     likesClasses = classNames({
-      "social-item": true,
-      "is-liked": this.state.isLiked
+      "social-item" : true,
+      "is-liked"    : this.state.isLiked
     });
     dislikesClasses = classNames({
-      "social-item": true,
-      "is-disliked": this.state.isDisliked
+      "social-item" : true,
+      "is-disliked" : this.state.isDisliked
     });
     return (
       <div className="message-item-social">
@@ -556,23 +556,23 @@ var MessageItemSocial = React.createClass({
           <div onClick={this.handleLike} className={likesClasses} ref="likes">
             <i className="fa fa-thumbs-up"></i>
             <span> Like </span>
-            <span> {this.state.likes} </span>
+            <span> {this.state.likeCount} </span>
           </div>
           <div onClick={this.handleDislike} className={dislikesClasses} ref="dislikes" >
             <i className="fa fa-thumbs-down"></i>
             <span> Dislike </span>
-            <span> {this.state.dislikes} </span>
+            <span> {this.state.dislikeCount} </span>
           </div>
         </div>
         <div className="social-item">
           <i className="fa fa-reply-all"></i>
           <span> Replies </span>
-          <span> {this.state.replies} </span>
+          <span> {this.state.replyCount} </span>
         </div>
         <div className="social-item">
           <i className="fa fa-share-alt"></i>
           <span> Share </span>
-          <span> {this.state.fb_share} </span>
+          <span> {this.state.fbShareCount} </span>
         </div>
       </div>
     )
