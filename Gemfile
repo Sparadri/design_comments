@@ -22,6 +22,7 @@ gem 'faker', '~> 1.6', '>= 1.6.1'
 gem 'js-routes'
 gem 'react-rails', '1.6.1'
 gem 'momentjs-rails', '~> 2.11'
+gem 'medium-editor-rails'
 
 gem 'acts_as_votable', '~> 0.10.0'
 

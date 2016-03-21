@@ -8,6 +8,7 @@
 //= require react-libraries
 //= require moment
 //= require draft
+//= require medium-editor
 //= require components
 //= require_tree .
 

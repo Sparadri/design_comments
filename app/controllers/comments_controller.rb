@@ -29,7 +29,7 @@ end
 
 # show only some messages & view more on click
 # linkState to work :)
-# add messages counter as person scrolling
+# add messages counter as person scrolls
 # do ajax call for likes
 # add medium editor & / or redactor-js & medium-insert on rails assets
 # componentWillMount for animation css comment pluggin loading
@@ -43,7 +43,6 @@ end
 # on modif / post message, should be able to see it live
 # ...this.props > tu pass tous les composants à ton enfant
 # TO CHECK KEEP IN MEMORY WHETHER USER HAS VOTED !!!!
-# should i use library has_voted????
 # on click else where disable & clear editing!!! with
 
 

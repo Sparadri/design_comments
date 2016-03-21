@@ -1,15 +1,34 @@
 class PagesController < ApplicationController
   def home
-    @users = User.all
     @comments = Comment.all
-    @full_comments = []
+    comment_hash = {}
     @comments.each do |comment|
-      replies = @comments.select { |reply| comment.id == reply.parent_comment_id }
-      like_count = comment.get_likes.size
-      dislike_count = comment.get_dislikes.size
-      hash = {comment: comment, replies: replies}
-      @full_comments << hash
+      # if comment is not a reply ...
+      if comment.parent_comment_id == nil
+        # ... gathers all replies to the comment
+        reply_hash = {}
+        @comments.each do |reply|
+          if comment.id == reply.parent_comment_id
+            reply_hash[reply.id.to_s.to_sym] = {
+              comment: get_comment_info(reply),
+              user: get_user_info(reply.user),
+              votes: get_votes(reply)
+            }
+          end
+        end
+        comment_hash[comment.id.to_s.to_sym] = {
+          comment: get_comment_info(comment),
+          user: get_user_info(comment.user),
+          votes: get_votes(comment),
+          replies: reply_hash
+        }
+      end
     end
+    # sorted hash properly sorted but not updating on front end...
+    sorted_hash = Hash[comment_hash.sort_by{|k, v| v[:comment][:created_at]}.reverse]
+
+    @current_user = get_current_user_info
+    @front_comments = sorted_hash
   end
 
   def test
