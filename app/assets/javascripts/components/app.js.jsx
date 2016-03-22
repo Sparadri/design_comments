@@ -29,7 +29,7 @@ var App = React.createClass({
       <div className="background-color">
         <div className="container">
           <div className="row">
-            <div className="col-xs-12 col-md-8 col-md-offset-2">
+            <div className="col-xs-12 col-md-6 col-md-offset-3">
               <ModalInt
                 isOpen          = {this.state.modalIsOpen}
                 currentComment  = {this.state.currentComment} />
@@ -43,6 +43,7 @@ var App = React.createClass({
                 transitionAppearTimeout={500}>
                 <MessagesList
                   addComment  = {this.addComment}
+                  ads         = {this.state.ads}
                   comments    = {this.state.comments} />
               </ReactCSSTransitionGroup>
             </div>
@@ -385,9 +386,13 @@ var MessagesList = React.createClass({
     )
   },
   render: function() {
+    var comments = this.props.comments;
+    var ads      = this.props.adds;
+    var adsCount = Object.keys(this.props.comments).length;
+    var that     = this;
     return (
       <div>
-        {Object.keys(this.props.comments).map(this.renderMessageItem)}
+        {Object.keys(comments).map(this.renderMessageItem)} ;
       </div>
     );
   }

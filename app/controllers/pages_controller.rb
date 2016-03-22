@@ -1,54 +1,69 @@
 class PagesController < ApplicationController
   def home
-    @comments = Comment.all
-    comment_hash = {}
-    @comments.each do |comment|
-      # if comment is not a reply ...
-      if comment.parent_comment_id == nil
-        # ... gathers all replies to the comment
-        reply_hash = {}
-        @comments.each do |reply|
-          if comment.id == reply.parent_comment_id
-            reply_hash[reply.id.to_s.to_sym] = {
-              comment: get_comment_info(reply),
-              user: get_user_info(reply.user),
-              votes: get_votes(reply)
-            }
-          end
-        end
-        comment_hash[comment.id.to_s.to_sym] = {
-          comment: get_comment_info(comment),
-          user: get_user_info(comment.user),
-          votes: get_votes(comment),
-          replies: reply_hash
-        }
-      end
-    end
-    # sorted hash properly sorted but not updating on front end...
-    sorted_hash = Hash[comment_hash.sort_by{|k, v| v[:comment][:created_at]}.reverse]
-
+    # generate comment hash
+    comment_hash = generate_comment_hash
+    # generate advertising hash
+    ad_hash = generate_ad_hash
+    # for jbuilder, making accessible variables
     @current_user = get_current_user_info
-    @front_comments = sorted_hash
+    @front_comments = comment_hash
+    @ad_hash = ad_hash
   end
 
   def test
-    @comments = Comment.all
+  end
+
+  def vote
+  end
+
+  private
+
+  def generate_ad_hash
+    advertisings = Advertising.all
+    ad_hash = {}
+    advertisings.each_with_index do |ad, index|
+      ad_hash[index.to_s.to_sym] =
+        {
+          title: ad.title,
+          picture: ad.picture,
+          advertiser: get_advertiser_info(ad.advertiser)
+        }
+    end
+    ad_hash
+  end
+
+  def get_advertiser_info(advertiser)
+    {
+      id: advertiser.id,
+      name: advertiser.name,
+      avatar_url: advertiser.avatar_url
+    }
+  end
+
+  # not used anymore
+  def sort_hash(comment_hash)
+    # sorted_hash = Hash[comment_hash.sort_by{|k, v| p v.keys[:comment]}.reverse]
+    comment_hash
+  end
+
+  def generate_comment_hash
+    comments = Comment.order(created_at: :desc)
     comment_hash = {}
-    @comments.each do |comment|
+    comments.each_with_index do |comment, c_index|
       # if comment is not a reply ...
       if comment.parent_comment_id == nil
         # ... gathers all replies to the comment
         reply_hash = {}
-        @comments.each do |reply|
+        comments.each_with_index do |reply, r_index|
           if comment.id == reply.parent_comment_id
-            reply_hash[reply.id.to_s.to_sym] = {
+            reply_hash[r_index.to_s.to_sym] = {
               comment: get_comment_info(reply),
               user: get_user_info(reply.user),
               votes: get_votes(reply)
             }
           end
         end
-        comment_hash[comment.id.to_s.to_sym] = {
+        comment_hash[c_index.to_s.to_sym] = {
           comment: get_comment_info(comment),
           user: get_user_info(comment.user),
           votes: get_votes(comment),
@@ -56,19 +71,8 @@ class PagesController < ApplicationController
         }
       end
     end
-    @current_user = get_current_user_info
-    @front_comments = comment_hash
+    return comment_hash
   end
-
-  def vote
-    # @post.liked_by @user1
-    # @post.unliked_by @user1
-
-    # @post.disliked_by @user1
-    # @post.undisliked_by @user1
-  end
-
-  private
 
   def get_current_user_info
     if user_signed_in?

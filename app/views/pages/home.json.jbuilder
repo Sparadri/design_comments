@@ -1,4 +1,5 @@
 json.current_user @current_user
+json.ads @ad_hash
 json.comments @front_comments
 
 

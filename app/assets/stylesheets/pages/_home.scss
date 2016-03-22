@@ -5,6 +5,7 @@
 
 .background-color {
   background-color: $gray-lighter;
+  padding-top: 20px;
 }
 
 .avatar-lg {
@@ -70,6 +71,8 @@
 
 .message-item-content {
   padding: 10px 0px;
+  color: $gray-dark;
+  font-size: 0.95em;
 }
 
 .message-item-social {
@@ -90,7 +93,7 @@
   }
   & .social-item {
     padding: 0px 5px;
-    width: 100px;
+    width: 88px;
     &:hover {
       color: black;
       cursor: pointer;
@@ -116,7 +119,7 @@ textarea {
 
 
 .create-post {
-  margin-top: 10px;
+  margin-top: 7px;
   border: 2px solid #A39ECA;
   border-radius: 3px;
   box-shadow: 1px 2px #EAEAEA;
