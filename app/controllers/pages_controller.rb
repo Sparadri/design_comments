@@ -24,9 +24,11 @@ class PagesController < ApplicationController
     advertisings.each_with_index do |ad, index|
       ad_hash[index.to_s.to_sym] =
         {
+        content: {
           title: ad.title,
-          picture: ad.picture,
-          advertiser: get_advertiser_info(ad.advertiser)
+          picture: ad.picture
+        },
+        advertiser: get_advertiser_info(ad.advertiser)
         }
     end
     ad_hash
@@ -50,11 +52,13 @@ class PagesController < ApplicationController
     comments = Comment.order(created_at: :desc)
     comment_hash = {}
     comments.each_with_index do |comment, c_index|
+      c_index += 1000
       # if comment is not a reply ...
       if comment.parent_comment_id == nil
         # ... gathers all replies to the comment
         reply_hash = {}
         comments.each_with_index do |reply, r_index|
+          r_index += 1000
           if comment.id == reply.parent_comment_id
             reply_hash[r_index.to_s.to_sym] = {
               comment: get_comment_info(reply),
