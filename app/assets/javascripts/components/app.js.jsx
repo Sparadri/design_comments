@@ -1,8 +1,10 @@
+var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 var App = React.createClass({
-  mixins: [React.addons.LinkedStateMixin],
+  mixins : [LinkedStateMixin],
   getInitialState() {
     return {
-      comments: this.props.comments
+      comments: this.props.comments,
+      modalIsOpen: false
     };
   },
   addComment: function(data){
@@ -12,12 +14,14 @@ var App = React.createClass({
     var parent    = data.parent_comment_id;
     var parentId  = data.parent_comment_id;
     if (parent == null) {
-      comments[id] = {comment: data, user: user, replies: {}};
+      comments[id] = {comment: data, user: user, replies: {}, votes: {like_count: 0, dislike_count: 0, is_liked: false, is_disliked: false}};
     } else {
-      comments[parentId].replies[id] = {comment: data, user: user, replies: {}};
+      comments[parentId].replies[id] = {comment: data, user: user, votes:{like_count: 0, dislike_count: 0, is_liked: false, is_disliked: false}, replies: {}};
     };
     this.setState({
-      comments: comments
+      comments: comments,
+      modalIsOpen: true,
+      currentComment: data["content"]
     });
   },
   render: function() {
@@ -25,9 +29,23 @@ var App = React.createClass({
       <div className="background-color">
         <div className="container">
           <div className="row">
-            <div className="col-xs-12 col-md-8 col-md-offset-2">
-              <CreatePost linkState={this.linkState} parentCommentId={null} addComment={this.addComment}/>
-              <MessagesList addComment={this.addComment} comments={this.state.comments} linkState={this.linkState}/>
+            <div className="col-xs-12 col-md-6 col-md-offset-3">
+              <ModalInt
+                isOpen          = {this.state.modalIsOpen}
+                currentComment  = {this.state.currentComment} />
+              <CreatePost
+                parentCommentId = {null}
+                currentComment  = {this.state.currentComment}
+                addComment      = {this.addComment} />
+              <ReactCSSTransitionGroup
+                transitionName    = "messagesList"
+                transitionAppear  = {true}
+                transitionAppearTimeout={500}>
+                <MessagesList
+                  addComment  = {this.addComment}
+                  ads         = {this.state.ads}
+                  comments    = {this.state.comments} />
+              </ReactCSSTransitionGroup>
             </div>
           </div>
         </div>
@@ -35,6 +53,139 @@ var App = React.createClass({
     );
   }
 });
+
+var ModalInt = React.createClass({
+  getInitialState() {
+    return {
+      modalIsOpen: this.props.isOpen
+    };
+  },
+  componentWillReceiveProps(newProps){
+    if (newProps.isOpen == true) {
+      this.openModal();
+    };
+  },
+  openModal: function() {
+    this.setState({modalIsOpen: true});
+  },
+  closeModal: function() {
+    this.setState({modalIsOpen: false});
+    // this.state.modalIsOpen
+  },
+  handleContentClick: function() {
+    var editorId = "editor"+Math.round(Math.random()*10000);
+    var textEditor = new MediumEditor('.editor', {
+      toolbar: {
+        buttons: [
+          {
+            name: 'bold',
+            contentDefault: '<i class="fa fa-bold"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'italic',
+            contentDefault: '<i class="fa fa-italic"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'quote',
+            contentDefault: '<i class="fa fa-quote-left"></i>',
+            classList: ['medium-editor-custom', 'border-left']
+          },
+          {
+            name: 'anchor',
+            contentDefault: '<i class="fa fa-link"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'orderedlist',
+            contentDefault: '<i class="fa fa-list-ol"></i>',
+            classList: ['medium-editor-custom', 'border-left']
+          },
+          {
+            name: 'unorderedlist',
+            contentDefault: '<i class="fa fa-list-ul"></i>',
+            classList: ['medium-editor-custom']
+          }
+        ]
+      },
+      anchorPreview: {
+          /* These are the default options for anchor preview,
+             if nothing is passed this is what it used */
+          hideDelay: 500,
+          previewValueSelector: 'a'
+      },
+      diffLeft: 0,
+      diffTop: -10,
+      firstButtonClass: 'medium-editor-button-first',
+      lastButtonClass: 'medium-editor-button-last',
+      standardizeSelectionStart: false,
+      static: false,
+      relativeContainer: null,
+      placeholder: {
+          text: 'Express your Opinion',
+          hideOnClick: true
+      }
+    });
+  },
+  renderContent: function() {
+    return {__html: this.props.currentComment};
+  },
+  renderModalContent: function() {
+    return(
+      <div className="modal-review">
+        <i className="close fa fa-times" onClick={this.closeModal}></i>
+        <h3 className="">Review your post before it goes live!</h3>
+        <div className="gray-divider"></div>
+        <div
+          className="modal-message-content editor"
+          contentEditable="true"
+          onClick={this.handleContentClick()}
+          dangerouslySetInnerHTML={this.renderContent()}
+          id={this.state.editorId} />
+        <div className="share-button full-width" >VALIDATE & SHARE</div>
+      </div>
+    )
+  },
+  render: function(){
+    const modalStyling = {
+      overlay : {
+        position          : 'fixed',
+        top               : 0,
+        left              : 0,
+        right             : 0,
+        bottom            : 0,
+        backgroundColor   : 'rgba(255, 255, 255, 0.75)'
+      },
+      content : {
+        position                   : 'absolute',
+        top                        : '40px',
+        left                       : '25%',
+        right                      : '25%',
+        bottom                     : '40px',
+        border                     : '1px solid #ccc',
+        background                 : '#fff',
+        overflow                   : 'auto',
+        WebkitOverflowScrolling    : 'touch',
+        borderRadius               : '4px',
+        outline                    : 'none',
+        padding                    : '20px'
+      }
+    };
+    return(
+      <div>
+        <ReactModal
+            isOpen          = {this.state.modalIsOpen}
+            onRequestClose  = {this.closeModal}
+            closeTimeoutMS  = {100}
+            style           = {modalStyling} >
+            {this.renderModalContent()}
+        </ReactModal>
+      </div>
+    )
+  }
+});
+
 var CreatePost = React.createClass({
   getInitialState() {
       return {
@@ -43,12 +194,12 @@ var CreatePost = React.createClass({
       };
   },
   handleSubmit: function(){
-    // careful, getText() to be replaced by getHTML()
-    var html = this.state.quill.getText();
-    var that = this;
+    var richText = this.state.richText;
+    var rawText  = this.state.rawText;
+    var that     = this;
     $.ajax({
       type: 'POST',
-      data: {comment: { content: html, parent_comment_id: that.props.parentCommentId }},
+      data: {comment: { content: richText, parent_comment_id: that.props.parentCommentId }},
       url: Routes.comments_path({format: 'json'}),
       success: function(data) {
         that.props.addComment(data);
@@ -61,39 +212,98 @@ var CreatePost = React.createClass({
     })
   },
   handleKeyUp: function(e) {
-    var text = this.state.quill.getText();
-    var keyPressed = e.which;
-    console.log(keyPressed);
-    console.log(text);
+    var html      = this.state.textEditor;
+    var editorId  = this.state.editorId;
+    var richText  = this.state.textEditor.serialize()[editorId]["value"];
+    var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
+    this.setState({richText: richText, rawText: rawText});
+    console.log("rich >> "+richText);
+    console.log("raw >> "+rawText);
   },
   handleClick: function() {
-    var editorId = "#"+this.refs.createPost.id
-    var quill = new Quill(editorId);
-    quill.addModule('toolbar', { container: '#post-toolbar' });
-    console.log(quill+' added');
+    var editorId = "editor"+Math.round(Math.random()*10000);
+    console.log(editorId);
+    var textEditor = new MediumEditor('.editor', {
+      toolbar: {
+        buttons: [
+          {
+            name: 'bold',
+            contentDefault: '<i class="fa fa-bold"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'italic',
+            contentDefault: '<i class="fa fa-italic"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'quote',
+            contentDefault: '<i class="fa fa-quote-left"></i>',
+            classList: ['medium-editor-custom', 'border-left']
+          },
+          {
+            name: 'anchor',
+            contentDefault: '<i class="fa fa-link"></i>',
+            classList: ['medium-editor-custom']
+          },
+          {
+            name: 'orderedlist',
+            contentDefault: '<i class="fa fa-list-ol"></i>',
+            classList: ['medium-editor-custom', 'border-left']
+          },
+          {
+            name: 'unorderedlist',
+            contentDefault: '<i class="fa fa-list-ul"></i>',
+            classList: ['medium-editor-custom']
+          }
+        ]
+      },
+      anchorPreview: {
+          /* These are the default options for anchor preview,
+             if nothing is passed this is what it used */
+          hideDelay: 500,
+          previewValueSelector: 'a'
+      },
+      diffLeft: 0,
+      diffTop: -10,
+      firstButtonClass: 'medium-editor-button-first',
+      lastButtonClass: 'medium-editor-button-last',
+      standardizeSelectionStart: false,
+      static: false,
+      relativeContainer: null,
+      placeholder: {
+          text: 'Express your Opinion',
+          hideOnClick: true
+      }
+    });
+    console.log(textEditor+' added');
     this.setState({
       focused: true,
-      quill: quill
+      textEditor: textEditor,
+      editorId: editorId
     })
   },
   handleDiscardClick: function() {
     this.setState({
       focused: false    // NOT WORKING???
     });
-    this.state.quill.setContents([]);
+
+    this.refs.createPost.innerHTML = '';
   },
   render: function() {
     AddPostClasses = classNames({
-      "create-post": !this.state.focused,
-      "hidden": this.state.focused
+      "create-post" : !this.state.focused,
+      "hidden"      :  this.state.focused
     });
     CreatePostClasses = classNames({
-      "create-post": this.state.focused,
-      "hidden": !this.state.focused
+      "create-post" : this.state.focused,
+      "hidden"      : !this.state.focused
     });
     textareaClasses = classNames({
-      "text-area": true,
-      "focused": this.state.focused
+      "text-area" : true,
+      "text-area" : true,
+      "editor"  : true,
+      "focused"   : this.state.focused
     });
     shareButton = classNames({
       "share-button": true,
@@ -117,15 +327,14 @@ var CreatePost = React.createClass({
         </div>
         <div className={CreatePostClasses}>
           <div
-            id={"editor"+Math.round(Math.random()*10000)}
-            placeholder="Express Your Opinion..."
+            id={this.state.editorId}
             className={textareaClasses}
             ref="createPost"
             onKeyUp={this.handleKeyUp}>
         </div>
           <div className={createPostControls}>
             <div id="post-toolbar">
-              <div className="toolbar-item ql-bold">
+              <div dataAction="bold" className="toolbar-item medium-editor-button-active">
                 <i className="fa fa-bold"></i>
               </div>
               <div className="toolbar-item ql-italic">
@@ -150,7 +359,9 @@ var CreatePost = React.createClass({
               </div>
             </div>
             <div className="left-toolbar">
-            <div className={discardButton} onClick={this.handleDiscardClick}><i className="fa fa-trash"></i></div>
+            <div className={discardButton} onClick={this.handleDiscardClick}>
+              <i className="fa fa-trash"></i>
+            </div>
             <div className={shareButton} onClick={this.handleSubmit}> Share now </div>
             </div>
           </div>
@@ -160,19 +371,78 @@ var CreatePost = React.createClass({
   }
 });
 
-var MessagesList = React.createClass({
-  renderMessageItem: function(key){
-    var comments = this.props.comments;
-    return (
-      <div key={key} className="message-item-card">
-        <MessageItem addComment={this.props.addComment} comment={comments[key].comment} user={comments[key].user} replies={comments[key].replies || {}}/>
-      </div>
-    )
-  },
+var AdItem = React.createClass({
   render: function() {
     return (
       <div>
-        {Object.keys(this.props.comments).map(this.renderMessageItem)}
+        <AdItemHeader
+          name        = {this.props.advertiser.name}
+          avatar_url  = {this.props.advertiser.avatar_url}/>
+          <AdItemContent content={this.props.content} />
+      </div>
+    );
+  }
+});
+
+var AdItemHeader = React.createClass({
+  render: function() {
+    return (
+      <div className="message-item-header">
+        <img className="avatar-md avatar-bordered avatar-square" src={this.props.avatar_url} />
+        <div className="details">
+          <div className="name"> {this.props.name} </div>
+          <div className="time"> Sponsored </div>
+        </div>
+      </div>
+    )
+  }
+});
+
+var AdItemContent = React.createClass({
+  render: function() {
+    return (
+      <div className="message-item-content">
+        {this.props.content.title}
+        <div className="ad-item-content">
+          <img src={this.props.content.picture} width="400px;"/>
+        </div>
+      </div>
+    )
+  }
+});
+
+var MessagesList = React.createClass({
+  renderMessageItem: function(key){
+    var comments = this.props.comments;
+    if (comments[key]["type"] == "comment") {
+      return (
+        <div key={key} className="message-item-card">
+          <MessageItem
+            addComment= {this.props.addComment}
+            votes     = {comments[key].votes}
+            comment   = {comments[key].comment}
+            user      = {comments[key].user}
+            replies   = {comments[key].replies} />
+        </div>
+      )
+    } else {
+      return (
+        <div key={key} className="message-item-card">
+          <AdItem
+            advertiser  = {comments[key].advertiser}
+            content     = {comments[key].content} />
+        </div>
+      )
+    };
+  },
+  render: function() {
+    var comments = this.props.comments;
+    var ads      = this.props.adds;
+    var adsCount = Object.keys(this.props.comments).length;
+    var that     = this;
+    return (
+      <div>
+        {Object.keys(comments).map(this.renderMessageItem)} ;
       </div>
     );
   }
@@ -182,15 +452,23 @@ var MessageItem = React.createClass({
   render: function() {
     return (
       <div>
-        <MessageItemHeader created_at={this.props.comment.created_at} user={this.props.user} avatar_url={this.props.user.avatar_url}/>
+        <MessageItemHeader
+          comment     = {this.props.comment}
+          created_at  = {this.props.comment.created_at}
+          user        = {this.props.user}
+          avatar_url  = {this.props.user.avatar_url}/>
         <MessageItemContent content={this.props.comment.content} />
         <MessageItemSocial
-          like_count={this.props.comment.like_count}
-          dislike_count={this.props.comment.dislike_count}
-          fb_share_count={this.props.comment.fb_share_count}
-          reply_count={Object.keys(this.props.replies).length} />
+          likeCount      = {this.props.votes.like_count}
+          dislikeCount   = {this.props.votes.dislike_count}
+          fbShareCount   = {this.props.comment.fb_share_count}
+          isLiked        = {this.props.votes.is_liked}
+          isDisliked     = {this.props.votes.is_disliked}
+          replyCount     = {Object.keys(this.props.replies).length} />
         <MessageReplyList replies={this.props.replies}/>
-        <ReplyForm addComment={this.props.addComment} parentCommentId={this.props.comment.id} />
+        <ReplyForm
+          addComment      = {this.props.addComment}
+          parentCommentId = {this.props.comment.id} />
       </div>
     );
   }
@@ -201,14 +479,20 @@ var MessageReplyList = React.createClass({
     var replies = this.props.replies;
     return (
       <div key={key}>
-         <MessageReplies comment={replies[key].comment} user={replies[key].user} />
+         <MessageReplies
+          votes   = {replies[key].votes}
+          comment = {replies[key].comment}
+          user    = {replies[key].user} />
       </div>
     )
   },
   render: function() {
+    ReplyListTopBorder = classNames({
+      "reply-list-top-border": Object.keys(this.props.replies).length > 0
+    });
     return (
       <div>
-        <div className="reply-list-top-border"></div>
+        <div className={ReplyListTopBorder}></div>
         {Object.keys(this.props.replies).map(this.renderMessageReplies)}
       </div>
     )
@@ -218,20 +502,20 @@ var MessageReplyList = React.createClass({
 var MessageReplies = React.createClass({
   getInitialState() {
     return {
-        isLiked: false,
-        likes: this.props.comment.like_count,
-        isDisliked: false,
-        dislikes: this.props.comment.dislike_count,
-        fb_share: this.props.comment.fb_share_count
+        isLiked   : this.props.votes.is_liked,
+        likes     : this.props.votes.like_count,
+        isDisliked: this.props.votes.is_disliked,
+        dislikes  : this.props.votes.dislike_count,
+        fb_share  : this.props.comment.fb_share_count
     };
   },
   handleLike: function(){
     if (this.state.isLiked == false && this.state.isDisliked == true) {
       this.setState({
-        isLiked: true,
-        likes: this.state.likes + 1,
+        isLiked   : true,
+        likes     : this.state.likes + 1,
         isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        dislikes  : this.state.dislikes - 1
       });
     } else if (this.state.isLiked == false) {
       this.setState({
@@ -248,10 +532,10 @@ var MessageReplies = React.createClass({
   handleDislike: function(){
     if (this.state.isDisliked == false && this.state.isLiked == true) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1,
-        isLiked: false,
-        likes: this.state.likes - 1
+        isDisliked  : true,
+        dislikes    : this.state.dislikes + 1,
+        isLiked     : false,
+        likes       : this.state.likes - 1
       });
     } else if (this.state.isDisliked == false) {
       this.setState({
@@ -316,7 +600,6 @@ var MessageReplies = React.createClass({
 });
 
 var MessageItemHeader = React.createClass({
-
   computeTime: function(timestamp) {
     var nbHours = moment(timestamp).startOf("hour").fromNow();
     if (nbHours < 1) {                      // less than 1 hr ago
@@ -331,7 +614,6 @@ var MessageItemHeader = React.createClass({
       return ( moment(timestamp).format('LL') )
     };
   },
-
   render: function() {
     return (
       <div className="message-item-header">
@@ -340,16 +622,47 @@ var MessageItemHeader = React.createClass({
           <div className="name"> {this.props.user.first_name} </div>
           <div className="time"> {this.computeTime(this.props.created_at)} </div>
         </div>
+        <EditMessage
+          messageId   = {this.props.comment.id}
+          isEditable  = {this.props.comment.is_editable}/>
+      </div>
+    )
+  }
+});
+
+var EditMessage = React.createClass({
+  renderEdit: function() {
+    if (this.props.isEditable) {
+      return (
+        <div>
+          <i className="fa fa-trash"></i>
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          <i className="fa fa-ban"></i>
+        </div>
+      )
+    };
+  },
+  render: function() {
+    return (
+      <div className="edit-message">
+        {this.renderEdit()}
       </div>
     )
   }
 });
 
 var MessageItemContent = React.createClass({
+  renderContent: function() {
+    return {__html: this.props.content};
+  },
   render: function() {
     return (
       <div className="message-item-content">
-        {this.props.content}
+        <div dangerouslySetInnerHTML={this.renderContent()} />
       </div>
     )
   }
@@ -358,62 +671,62 @@ var MessageItemContent = React.createClass({
 var MessageItemSocial = React.createClass({
   getInitialState() {
     return {
-        isLiked: false,
-        likes: this.props.like_count,
-        isDisliked: false,
-        dislikes: this.props.dislike_count,
-        fb_share: this.props.fb_share_count,
-        replies: this.props.reply_count
+        isLiked      : this.props.isLiked,
+        likeCount    : this.props.likeCount,
+        isDisliked   : this.props.isDisliked,
+        dislikeCount : this.props.dislikeCount,
+        fbShareCount : this.props.fbShareCount,
+        replyCount   : this.props.replyCount
     };
   },
   handleLike: function(){
     if (this.state.isLiked == false && this.state.isDisliked == true) {
       this.setState({
-        isLiked: true,
-        likes: this.state.likes + 1,
+        isLiked   : true,
+        likeCount     : this.state.likeCount + 1,
         isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        dislikeCount  : this.state.dislikeCount - 1
       });
     } else if (this.state.isLiked == false) {
       this.setState({
         isLiked: true,
-        likes: this.state.likes + 1
+        likeCount: this.state.likeCount + 1
       });
     } else {
       this.setState({
         isLiked: false,
-        likes: this.state.likes - 1
+        likeCount: this.state.likeCount - 1
       });
     }
   },
   handleDislike: function(){
     if (this.state.isDisliked == false && this.state.isLiked == true) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1,
-        isLiked: false,
-        likes: this.state.likes - 1
+        isDisliked    : true,
+        dislikeCount  : this.state.dislikeCount + 1,
+        isLiked       : false,
+        likeCount     : this.state.likeCount - 1
       });
     } else if (this.state.isDisliked == false) {
       this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1
+        isDisliked  : true,
+        dislikeCount: this.state.dislikeCount + 1
       });
     } else {
       this.setState({
-        isDisliked: false,
-        dislikes: this.state.dislikes - 1
+        isDisliked  : false,
+        dislikeCount: this.state.dislikeCount - 1
       });
     }
   },
   render: function() {
     likesClasses = classNames({
-      "social-item": true,
-      "is-liked": this.state.isLiked
+      "social-item" : true,
+      "is-liked"    : this.state.isLiked
     });
     dislikesClasses = classNames({
-      "social-item": true,
-      "is-disliked": this.state.isDisliked
+      "social-item" : true,
+      "is-disliked" : this.state.isDisliked
     });
     return (
       <div className="message-item-social">
@@ -421,23 +734,23 @@ var MessageItemSocial = React.createClass({
           <div onClick={this.handleLike} className={likesClasses} ref="likes">
             <i className="fa fa-thumbs-up"></i>
             <span> Like </span>
-            <span> {this.state.likes} </span>
+            <span> {this.state.likeCount} </span>
           </div>
           <div onClick={this.handleDislike} className={dislikesClasses} ref="dislikes" >
             <i className="fa fa-thumbs-down"></i>
             <span> Dislike </span>
-            <span> {this.state.dislikes} </span>
+            <span> {this.state.dislikeCount} </span>
           </div>
         </div>
         <div className="social-item">
           <i className="fa fa-reply-all"></i>
           <span> Replies </span>
-          <span> {this.state.replies} </span>
+          <span> {this.state.replyCount} </span>
         </div>
         <div className="social-item">
           <i className="fa fa-share-alt"></i>
           <span> Share </span>
-          <span> {this.state.fb_share} </span>
+          <span> {this.state.fbShareCount} </span>
         </div>
       </div>
     )
@@ -448,7 +761,9 @@ var ReplyForm = React.createClass({
   render: function() {
     return (
       <div className="reply-form">
-        <CreatePost addComment={this.props.addComment} parentCommentId={this.props.parentCommentId} />
+        <CreatePost
+          addComment={this.props.addComment}
+          parentCommentId={this.props.parentCommentId} />
       </div>
     )
   }

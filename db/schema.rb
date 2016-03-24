@@ -11,10 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160318200411) do
+ActiveRecord::Schema.define(version: 20160323145609) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "advertisers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "avatar_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "advertisings", force: :cascade do |t|
+    t.string   "title"
+    t.string   "like_count",    default: "0"
+    t.string   "integer",       default: "0"
+    t.string   "picture"
+    t.integer  "advertiser_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
 
   create_table "comments", force: :cascade do |t|
     t.string   "content"
@@ -25,6 +42,7 @@ ActiveRecord::Schema.define(version: 20160318200411) do
     t.integer  "dislike_count",     default: 0
     t.integer  "fb_share_count",    default: 0
     t.integer  "parent_comment_id"
+    t.string   "content_type"
   end
 
   create_table "users", force: :cascade do |t|

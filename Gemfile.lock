@@ -95,6 +95,8 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
+    medium-editor-rails (2.1.0)
+      railties (>= 3.0)
     method_source (0.8.2)
     mime-types (2.99.1)
     mini_portile2 (2.0.0)
@@ -211,6 +213,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   js-routes
+  medium-editor-rails
   momentjs-rails (~> 2.11)
   pg
   pry-byebug
@@ -221,7 +224,7 @@ DEPENDENCIES
   rails-assets-classnames!
   rails-assets-quill!
   rails-assets-react-dom!
-  rails-assets-react-modal
+  rails-assets-react-modal!
   rails_12factor
   react-rails (= 1.6.1)
   redis
