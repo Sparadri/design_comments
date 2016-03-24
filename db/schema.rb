@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(version: 20160323145609) do
     t.integer  "dislike_count",     default: 0
     t.integer  "fb_share_count",    default: 0
     t.integer  "parent_comment_id"
-    t.string   "type"
+    t.string   "content_type"
   end
 
   create_table "users", force: :cascade do |t|

@@ -5,9 +5,8 @@ class Comment < ActiveRecord::Base
   has_many :replies
 
   # type to be added for mapping
-  validates :type, inclusion: { in: %w(picture text video link) }
+  validates :content_type, inclusion: { in: %w(picture text video link) }
 
-  scope :replies, -> (parent_id) { where(parent_id: parent_id) }
-
+  scope :replies, -> (parent_comment_id) { where(parent_comment_id: parent_comment_id) }
 
 end

@@ -73,6 +73,7 @@ i = 0
   comment = Comment.create(
     content: content,
     user: user,
+    content_type: "text",
     created_at: Faker::Time.between(DateTime.now - 10, DateTime.now),
     like_count: (0..50).to_a.sample,
     dislike_count: (0..50).to_a.sample,
@@ -82,9 +83,11 @@ i = 0
   comments = Comment.all
   unless User.all.length < 3
     (0..5).to_a.sample.times do
+      p comments.sample
       reply = Comment.create(
         content: Faker::Lorem.sentence(3, true),
         user: User.all.sample,
+        content_type: "text",
         created_at: Faker::Time.between(DateTime.now - 10, DateTime.now),
         like_count: (0..5).to_a.sample,
         dislike_count: (0..5).to_a.sample,
@@ -94,14 +97,17 @@ i = 0
       p "#{reply.user.first_name}'s reply: #{reply.content} is created"
     end
   end
-  (0..1).to_a.sample.times do
-    Comment.all.sample.liked_by User.all.sample
-  end
-  (0..1).to_a.sample.times do
-    Comment.all.sample.disliked_by User.all.sample
-  end
   i += 1
 end
+
+(20..40).to_a.sample.times do
+  Comment.all.sample.liked_by User.all.sample
+end
+(10..20).to_a.sample.times do
+  Comment.all.sample.disliked_by User.all.sample
+end
+
+
 
 # creates advertising
 advertiser = Advertiser.create(
