@@ -418,3 +418,10 @@ blockquote {
   font-size: 1em;
   font-style: italic;
 }
+.ad-item-content {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}

@@ -371,19 +371,69 @@ var CreatePost = React.createClass({
   }
 });
 
+var AdItem = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <AdItemHeader
+          name        = {this.props.advertiser.name}
+          avatar_url  = {this.props.advertiser.avatar_url}/>
+          <AdItemContent content={this.props.content} />
+      </div>
+    );
+  }
+});
+
+var AdItemHeader = React.createClass({
+  render: function() {
+    return (
+      <div className="message-item-header">
+        <img className="avatar-md avatar-bordered avatar-square" src={this.props.avatar_url} />
+        <div className="details">
+          <div className="name"> {this.props.name} </div>
+          <div className="time"> Sponsored </div>
+        </div>
+      </div>
+    )
+  }
+});
+
+var AdItemContent = React.createClass({
+  render: function() {
+    return (
+      <div className="message-item-content">
+        {this.props.content.title}
+        <div className="ad-item-content">
+          <img src={this.props.content.picture} width="400px;"/>
+        </div>
+      </div>
+    )
+  }
+});
+
 var MessagesList = React.createClass({
   renderMessageItem: function(key){
     var comments = this.props.comments;
-    return (
-      <div key={key} className="message-item-card">
-        <MessageItem
-          addComment= {this.props.addComment}
-          votes     = {comments[key].votes}
-          comment   = {comments[key].comment}
-          user      = {comments[key].user}
-          replies   = {comments[key].replies || {}}/>
-      </div>
-    )
+    if (comments[key]["type"] == "comment") {
+      return (
+        <div key={key} className="message-item-card">
+          <MessageItem
+            addComment= {this.props.addComment}
+            votes     = {comments[key].votes}
+            comment   = {comments[key].comment}
+            user      = {comments[key].user}
+            replies   = {comments[key].replies} />
+        </div>
+      )
+    } else {
+      return (
+        <div key={key} className="message-item-card">
+          <AdItem
+            advertiser  = {comments[key].advertiser}
+            content     = {comments[key].content} />
+        </div>
+      )
+    };
   },
   render: function() {
     var comments = this.props.comments;

@@ -15,6 +15,8 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+config.autoload_paths += Dir["#{Rails.root}/lib/wilson_score"]
+
 module Design
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

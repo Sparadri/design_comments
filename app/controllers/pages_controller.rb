@@ -1,13 +1,8 @@
 class PagesController < ApplicationController
   def home
-    # generate comment hash
-    comment_hash = generate_comment_hash
-    # generate advertising hash
-    ad_hash = generate_ad_hash
     # for jbuilder, making accessible variables
     @current_user = get_current_user_info
-    @front_comments = comment_hash
-    @ad_hash = ad_hash
+    @items        = generate_items_hash
   end
 
   def test
@@ -18,20 +13,22 @@ class PagesController < ApplicationController
 
   private
 
-  def generate_ad_hash
+  def generate_ad_array
     advertisings = Advertising.all
-    ad_hash = {}
+    ad_array = []
     advertisings.each_with_index do |ad, index|
-      ad_hash[index.to_s.to_sym] =
+      ad_array <<
         {
+        type: "ad",
         content: {
+          id: ad.id,
           title: ad.title,
           picture: ad.picture
         },
         advertiser: get_advertiser_info(ad.advertiser)
         }
     end
-    ad_hash
+    ad_array
   end
 
   def get_advertiser_info(advertiser)
@@ -48,31 +45,40 @@ class PagesController < ApplicationController
     comment_hash
   end
 
-  def generate_comment_hash
+  def generate_items_hash
     comments = Comment.order(created_at: :desc)
+    ads = generate_ad_array
+    ad_index = 0
+
     comment_hash = {}
     comments.each_with_index do |comment, c_index|
       c_index += 1000
       # if comment is not a reply ...
-      if comment.parent_comment_id == nil
-        # ... gathers all replies to the comment
-        reply_hash = {}
-        comments.each_with_index do |reply, r_index|
-          r_index += 1000
-          if comment.id == reply.parent_comment_id
-            reply_hash[r_index.to_s.to_sym] = {
-              comment: get_comment_info(reply),
-              user: get_user_info(reply.user),
-              votes: get_votes(reply)
-            }
+      if (c_index - 1000) % 3 == 1
+        comment_hash[c_index.to_s.to_sym] = ads[ad_index] unless ads[ad_index] == nil
+        ad_index += 1
+      else
+        if comment.parent_comment_id == nil
+          # ... gathers all replies to the comment
+          reply_hash = {}
+          comments.each_with_index do |reply, r_index|
+            r_index += 1000
+            if comment.id == reply.parent_comment_id
+              reply_hash[r_index.to_s.to_sym] = {
+                comment: get_comment_info(reply),
+                user: get_user_info(reply.user),
+                votes: get_votes(reply)
+              }
+            end
           end
+          comment_hash[c_index.to_s.to_sym] = {
+            type: "comment",
+            comment: get_comment_info(comment),
+            user: get_user_info(comment.user),
+            votes: get_votes(comment),
+            replies: reply_hash
+          }
         end
-        comment_hash[c_index.to_s.to_sym] = {
-          comment: get_comment_info(comment),
-          user: get_user_info(comment.user),
-          votes: get_votes(comment),
-          replies: reply_hash
-        }
       end
     end
     return comment_hash
