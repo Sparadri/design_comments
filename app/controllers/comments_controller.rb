@@ -1,22 +1,58 @@
 class CommentsController < ApplicationController
 
   def create
-    @comment = Comment.new(comments_params)
+    comment = Comment.new(comments_params)
     # current_user is given twice > once here & once in the app.js when updating state
-    @comment.user = current_user
-    @comment.save
+    comment.content_type = "text"
+    comment.user         = current_user
+    comment.save
+
+    comment_hash    = generate_comment_hash(comment, {})
+
     # should not render full JSON but only what's needed
-    render json: @comment
+    render json: comment_hash
   end
 
   def update
-    p 'uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu'
+  end
+
+  def delete
+    comment_id = params[:id]
+    Comment.find(comment_id).destroy
+    success = ["comment #{comment_id} deleted"]
+    render json: success
+  end
+
+  def like
+    comment = Comment.find(comments_params[:id])
+
+    before_likes = comment.get_likes.length
+    before_dislikes = comment.get_dislikes.length
+
+    p "params: "
+    p like    = comments_params[:likeChange].to_i
+    p dislike = comments_params[:dislikeChange].to_i
+
+    comment.unliked_by    current_user if like == -1
+    comment.liked_by      current_user if like == 1
+    comment.disliked_by   current_user if dislike == 1
+    comment.undisliked_by current_user if dislike == -1
+
+    after_likes = comment.get_likes.length
+    after_dislikes = comment.get_dislikes.length
+
+    success = ["comment: '#{comment.content}' liked,
+      before likes: #{before_likes},
+      after likes: #{after_likes},
+      before dislikes: #{before_dislikes},
+      after dislikes: #{after_dislikes}"]
+    render json: success
   end
 
   private
 
   def comments_params
-    params.require(:comment).permit(:content, :parent_comment_id)
+    params.require(:comment).permit(:content, :parent_comment_id, :comment, :id, :likeChange, :dislikeChange)
   end
 
 end
@@ -27,11 +63,19 @@ end
 # RECUPERER DU CODE DISCOURSE!!!
 # exemple locales: https://github.com/discourse/discourse/blob/9f30a28a8e850ff3e35d7ed240687d987d33e197/config/locales/client.fr.yml
 
+
+# open graph parser
+
 # show only some messages & view more on click
+
 # linkState to work :)
+# add medium editor & / or redactor-js & medium-insert on rails assets
+# share on social networks
+
+# do summary KPIs
+
 # add messages counter as person scrolls
 # do ajax call for likes
-# add medium editor & / or redactor-js & medium-insert on rails assets
 # componentWillMount for animation css comment pluggin loading
 # fix time / hours
 # add picture when person types his message (or when review?)

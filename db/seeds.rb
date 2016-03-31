@@ -82,7 +82,7 @@ i = 0
   p "#{comment.user.first_name}'s message: #{comment.content}"
   comments = Comment.all
   unless User.all.length < 3
-    (0..5).to_a.sample.times do
+    (5..15).to_a.sample.times do
       p comments.sample
       reply = Comment.create(
         content: Faker::Lorem.sentence(3, true),
@@ -100,10 +100,10 @@ i = 0
   i += 1
 end
 
-(20..40).to_a.sample.times do
+(30..40).to_a.sample.times do
   Comment.all.sample.liked_by User.all.sample
 end
-(10..20).to_a.sample.times do
+(20..30).to_a.sample.times do
   Comment.all.sample.disliked_by User.all.sample
 end
 

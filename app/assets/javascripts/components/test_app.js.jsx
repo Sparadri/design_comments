@@ -1,5 +1,5 @@
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-var App = React.createClass({
+var TestApp = React.createClass({
   mixins : [LinkedStateMixin],
   getInitialState() {
     return {
@@ -36,16 +36,16 @@ var App = React.createClass({
   },
   render: function() {
     return (
-      <div className="background-color">
+      <div className="background-color test">
       <div onClick={this.fb_share}> fb_share </div>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-6 col-md-offset-3">
-              <ModalInt
+              <TestModalInt
                 isOpen          = {this.state.modalIsOpen}
                 currentComment  = {this.state.currentComment} />
-              <SummaryStats global_stats= {this.props.global_stats} />
-              <CreatePost
+              <TestSummaryStats global_stats= {this.props.global_stats} />
+              <TestCreatePost
                 parentCommentId = {null}
                 currentComment  = {this.state.currentComment}
                 addComment      = {this.addComment} />
@@ -53,7 +53,7 @@ var App = React.createClass({
                 transitionName    = "messagesList"
                 transitionAppear  = {true}
                 transitionAppearTimeout={500}>
-                <MessagesList
+                <TestMessagesList
                   addComment  = {this.addComment}
                   ads         = {this.state.ads}
                   comments    = {this.state.comments} />
