@@ -6,7 +6,7 @@
 .test {
   &.background-color {
     background-color: $gray-lighter;
-    padding-top: 20px;
+    padding-top: 60px;
   }
   .avatar-lg {
     width: 50px;
@@ -376,7 +376,7 @@
   }
   .messagesList-appear.messagesList-appear-active {
     opacity: 1;
-    transition: opacity .5s ease-in;
+    transition: opacity .8s ease-in;
   }
 
 
@@ -459,7 +459,6 @@
     border-top: 2px solid #A39ECA;
     border-bottom: 1px solid $gray-lighter;
     padding: 10px 15px 5px 15px;
-    margin-top: 30px;
     color: #898998;
     box-shadow: 1px 2px #EAEAEA;
     .title {
@@ -648,3 +647,33 @@
       box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.12), 1px 2px 4px rgba(0, 0, 0, 0.24);
     }
   }
+
+
+.tab-menu {
+  width: 100%;
+  border-top: 2px solid #A39ECA;
+  background-color: rgba(107, 185, 240, 0.28);
+  color: $gray;
+  display: flex;
+  flex-flow: grow;
+  text-align: center;
+  font-size: 0.8em;
+  font-weight: 400;
+  .item {
+    flex-grow: 1;
+    border-right: 1px solid rgba(107, 185, 240, 0.37);
+    padding: 6px 0px;
+    cursor: pointer;
+  }
+  .item:hover {
+    background-color: rgba(107, 185, 240, 0.37);
+  }
+  .item:last-child {
+    border: none;
+  }
+}
+// .hint:after {
+//   width: 150px;
+//   white-space: pre-wrap;
+//   padding: 5px;
+// }

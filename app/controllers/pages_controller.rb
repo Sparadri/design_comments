@@ -129,12 +129,6 @@ class PagesController < ApplicationController
 
 end
 
-# add in table > user is verified
-# REVIEW ALL CODE
-# REDO MODAL
-# DO 2 DIFFERENT TEXT EDITORS DEPENDING ANSWER / NOT ANSWER
-# do tabs on top >  best / all / my comments / my interactions
-# in ppt, a comment summarizes an article
 
 # # retrieves votes
 # @comments.each do |comment|

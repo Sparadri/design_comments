@@ -262,9 +262,11 @@ var TestEditMessage = React.createClass({
     if (this.props.isEditable) {
       return (
         <div className={editMessage}>
+            <span className="hint hint--top hint--small hint--rounded hint--info hint--rounded" data-hint="Verified Commenters can leave comments without initial moderation. Verified status is earned based on a history of quality comments.">
           <div className="message-ctrl-item certified" >
-            <i className="fa fa-check-circle"></i>
+              <i className="fa fa-check-circle"></i>
           </div>
+            </span>
           <div className="message-ctrl-item trash" onClick={this.deleteComment}>
             <i className="fa fa-trash"></i>
           </div>
@@ -277,13 +279,19 @@ var TestEditMessage = React.createClass({
       return (
         <div className={editMessage}>
           <div className="message-ctrl-item certified" >
-            <i className="fa fa-check-circle"></i>
+            <span className="hint hint--top hint--medium hint--rounded hint--success hint--rounded" data-hint="Verified Commenters can leave comments without initial moderation. Verified status is earned based on a history of quality comments.">
+              <i className="fa fa-check-circle"></i>
+            </span>
           </div>
           <div className="message-ctrl-item ban">
-            <i className="fa fa-ban"></i>
+            <span className="hint hint--top hint--medium hint--rounded hint--error hint--rounded" data-hint="Banned comments will be reviewed with dedication by the moderation team & removed in case the content is not relevant.">
+              <i className="fa fa-ban"></i>
+            </span>
           </div>
           <div className="message-ctrl-item share">
-            <i className="fa fa-share-alt"></i>
+            <span className="hint hint--top hint--medium hint--rounded hint--info hint--rounded" data-hint="Share best comments on Facebook & spread the word :)">
+              <i className="fa fa-share-alt"></i>
+            </span>
           </div>
         </div>
       )

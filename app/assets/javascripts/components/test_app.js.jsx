@@ -27,32 +27,25 @@ var TestApp = React.createClass({
       currentComment: currentComment
     });
   },
-  fb_share: function() {
-    FB.ui(
-     {
-      method: 'share',
-      href: 'https://developers.facebook.com/docs/'
-    }, function(response){});
-  },
   render: function() {
     return (
       <div className="background-color test">
-      <div onClick={this.fb_share}> fb_share </div>
         <div className="container">
           <div className="row">
             <div className="col-xs-12 col-md-6 col-md-offset-3">
-              <TestModalInt
-                isOpen          = {this.state.modalIsOpen}
-                currentComment  = {this.state.currentComment} />
-              <TestSummaryStats global_stats= {this.props.global_stats} />
-              <TestCreatePost
-                parentCommentId = {null}
-                currentComment  = {this.state.currentComment}
-                addComment      = {this.addComment} />
               <ReactCSSTransitionGroup
                 transitionName    = "messagesList"
                 transitionAppear  = {true}
                 transitionAppearTimeout={500}>
+                <TestModalInt
+                  isOpen          = {this.state.modalIsOpen}
+                  currentComment  = {this.state.currentComment} />
+                <TestSummaryStats global_stats= {this.props.global_stats} />
+                <TestCreatePost
+                  parentCommentId = {null}
+                  currentComment  = {this.state.currentComment}
+                  addComment      = {this.addComment} />
+                <TestMessageTab/>
                 <TestMessagesList
                   addComment  = {this.addComment}
                   ads         = {this.state.ads}

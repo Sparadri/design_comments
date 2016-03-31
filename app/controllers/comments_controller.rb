@@ -58,6 +58,11 @@ class CommentsController < ApplicationController
 end
 
 
+# add in table > is_verified user
+# REVIEW ALL CODE
+# REDO MODAL
+# do tabs on top >  best / all / my comments / my interactions
+# in ppt, a comment summarizes an article
 
 # CHECK DISCOURSE TEXT INPUTS
 # RECUPERER DU CODE DISCOURSE!!!

@@ -217,7 +217,7 @@ var TestReplyPost = React.createClass({
   },
   getName: function() {
     var parentCommentKey = this.props.parentCommentKey;
-    that.props.comments[parentCommentKey].
+    that.props.comments[parentCommentKey];
   },
   handleKeyUp: function(e) {
     var richText  = this.refs.replyPost.innerHTML;
