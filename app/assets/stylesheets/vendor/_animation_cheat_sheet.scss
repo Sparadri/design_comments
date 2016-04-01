@@ -400,8 +400,8 @@ fadeIn
   animation-name: fadeIn;
   -webkit-animation-name: fadeIn;
 
-  animation-duration: 1.5s;
-  -webkit-animation-duration: 1.5s;
+  animation-duration: 0.3s;
+  -webkit-animation-duration: 0.3s;
 
   animation-timing-function: ease-in-out;
   -webkit-animation-timing-function: ease-in-out;
@@ -415,10 +415,10 @@ fadeIn
     opacity: 0.0;
   }
   60% {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
   80% {
-    transform: scale(0.9);
+    transform: scale(0.95);
     opacity: 1;
   }
   100% {
@@ -433,10 +433,10 @@ fadeIn
     opacity: 0.0;
   }
   60% {
-    -webkit-transform: scale(1.1);
+    -webkit-transform: scale(1.05);
   }
   80% {
-    -webkit-transform: scale(0.9);
+    -webkit-transform: scale(0.95);
     opacity: 1;
   }
   100% {

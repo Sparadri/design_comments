@@ -25,6 +25,7 @@ gem 'momentjs-rails', '~> 2.11'
 gem 'medium-editor-rails'
 
 gem 'acts_as_votable', '~> 0.10.0'
+gem 'sweetalert-rails'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-classnames'

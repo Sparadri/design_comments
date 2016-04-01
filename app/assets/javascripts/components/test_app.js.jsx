@@ -1,5 +1,5 @@
 var ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
-var App = React.createClass({
+var TestApp = React.createClass({
   mixins : [LinkedStateMixin],
   getInitialState() {
     return {
@@ -27,40 +27,27 @@ var App = React.createClass({
       currentComment: currentComment
     });
   },
-  fb_share: function() {
-    FB.ui(
-     {
-      method: 'share',
-      href: 'https://developers.facebook.com/docs/'
-    }, function(response){});
-  },
   render: function() {
     return (
-      <div className="background-color">
-      <div onClick={this.fb_share}> fb_share </div>
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-md-6 col-md-offset-3">
-              <ModalInt
-                isOpen          = {this.state.modalIsOpen}
-                currentComment  = {this.state.currentComment} />
-              <SummaryStats global_stats= {this.props.global_stats} />
-              <CreatePost
-                parentCommentId = {null}
-                currentComment  = {this.state.currentComment}
-                addComment      = {this.addComment} />
+      <div className="background-color test">
               <ReactCSSTransitionGroup
                 transitionName    = "messagesList"
                 transitionAppear  = {true}
                 transitionAppearTimeout={500}>
-                <MessagesList
+                <TestModalInt
+                  isOpen          = {this.state.modalIsOpen}
+                  currentComment  = {this.state.currentComment} />
+                <TestSummaryStats global_stats= {this.props.global_stats} />
+                <TestCreatePost
+                  parentCommentId = {null}
+                  currentComment  = {this.state.currentComment}
+                  addComment      = {this.addComment} />
+                <TestMessageTab/>
+                <TestMessagesList
                   addComment  = {this.addComment}
                   ads         = {this.state.ads}
                   comments    = {this.state.comments} />
               </ReactCSSTransitionGroup>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }

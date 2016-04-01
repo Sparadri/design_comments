@@ -7,7 +7,7 @@
 //= require react-dom
 //= require react-libraries
 //= require moment
-//= require draft
+//= require sweet-alert
 //= require medium-editor
 //= require components
 //= require_tree .

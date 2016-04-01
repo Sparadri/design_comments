@@ -2,6 +2,8 @@ Rails.application.routes.draw do
   get 'comments/create'
 
   get 'comments/update'
+  delete  'comments/:id', to: 'comments#delete', as: :delete_comment
+  post 'comments/like', to: 'comments#like', as: :like_comment
 
   devise_for :users
   root to: 'pages#home'

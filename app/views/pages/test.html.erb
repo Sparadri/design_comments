@@ -1,16 +1,2 @@
-<p> comment module beta v1 </p>
-<p><%= current_user %></p>
-<p><%= user_signed_in? %></p>
-
-<%= react_component "AppTest",
+<%= react_component "TestApp",
           render(template: 'pages/test.json.jbuilder') %>
-
-
-
-
-<%= content_for(:after_js) do %>
-<script>
-  $(document).ready(function(){
-  })
-</script>
-<% end %>

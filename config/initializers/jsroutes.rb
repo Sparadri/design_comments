@@ -6,6 +6,8 @@ JsRoutes.setup do |config|
   #       before restarting your `rails s`.
   config.include = [
     /^comments$/,
-    /^comment$/
+    /^comment$/,
+    /^delete_comment$/,
+    /^like_comment$/
   ]
 end
