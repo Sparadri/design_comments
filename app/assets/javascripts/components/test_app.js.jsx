@@ -30,9 +30,6 @@ var TestApp = React.createClass({
   render: function() {
     return (
       <div className="background-color test">
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-12 col-md-6 col-md-offset-3">
               <ReactCSSTransitionGroup
                 transitionName    = "messagesList"
                 transitionAppear  = {true}
@@ -51,9 +48,6 @@ var TestApp = React.createClass({
                   ads         = {this.state.ads}
                   comments    = {this.state.comments} />
               </ReactCSSTransitionGroup>
-            </div>
-          </div>
-        </div>
       </div>
     );
   }

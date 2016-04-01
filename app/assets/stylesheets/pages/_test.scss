@@ -6,7 +6,7 @@
 .test {
   &.background-color {
     background-color: $gray-lighter;
-    padding-top: 60px;
+    // padding-top: 60px;
   }
   .avatar-lg {
     width: 50px;
@@ -652,21 +652,26 @@
 .tab-menu {
   width: 100%;
   border-top: 2px solid #A39ECA;
-  background-color: rgba(107, 185, 240, 0.28);
-  color: $gray;
   display: flex;
   flex-flow: grow;
-  text-align: center;
-  font-size: 0.8em;
-  font-weight: 400;
+  box-shadow: 1px 2px #EAEAEA;
   .item {
     flex-grow: 1;
-    border-right: 1px solid rgba(107, 185, 240, 0.37);
+    border-right: 1px solid rgb(185, 190, 195);
+    background-color: #F2F4F6;
     padding: 6px 0px;
     cursor: pointer;
+    text-transform: uppercase;
+    color: #B9BEC3;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    font-size: 0.8em;
+    text-align: center;
+    transition: all 0.2s ease;
   }
   .item:hover {
-    background-color: rgba(107, 185, 240, 0.37);
+    background-color: rgba(190, 190, 195, 0.31);
+    color: #A29CA1;
   }
   .item:last-child {
     border: none;
