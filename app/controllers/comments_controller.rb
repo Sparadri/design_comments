@@ -64,6 +64,9 @@ end
 # do tabs on top >  best / all / my comments / my interactions
 # in ppt, a comment summarizes an article
 
+# record likes // dislikes in database
+# allow posting from unknown & erase on refresh
+
 # CHECK DISCOURSE TEXT INPUTS
 # RECUPERER DU CODE DISCOURSE!!!
 # exemple locales: https://github.com/discourse/discourse/blob/9f30a28a8e850ff3e35d7ed240687d987d33e197/config/locales/client.fr.yml
