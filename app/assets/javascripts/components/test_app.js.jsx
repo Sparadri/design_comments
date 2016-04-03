@@ -49,7 +49,7 @@ var TestApp = React.createClass({
                   comments    = {this.state.comments} />
               </ReactCSSTransitionGroup>
       </div>
-    );
+    )
   }
 });
 

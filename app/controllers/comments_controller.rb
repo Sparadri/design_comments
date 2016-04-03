@@ -57,7 +57,12 @@ class CommentsController < ApplicationController
 
 end
 
-
+# to do list
+#
+# sorting comments > create arrays
+# add example comment but do no record in database
+#
+#
 # add in table > is_verified user
 # REVIEW ALL CODE
 # REDO MODAL

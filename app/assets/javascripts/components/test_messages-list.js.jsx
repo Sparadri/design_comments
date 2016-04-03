@@ -55,7 +55,7 @@ var TestMessagesList = React.createClass({
     var that     = this;
     return (
       <div>
-        {Object.keys(comments).map(this.renderMessageItem)} ;
+        {Object.keys(comments).map(this.renderMessageItem)}
       </div>
     );
   }
