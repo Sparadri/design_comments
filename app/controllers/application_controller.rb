@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_comment_details(comment)
-    comment.user.id == current_user[:id] ? is_editable = true : is_editable = false
+    comment.user == current_user ? is_editable = true : is_editable = false
     { id:      comment.id,
       content: comment.content,
       created_at:  comment.created_at,

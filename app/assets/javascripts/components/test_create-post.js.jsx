@@ -17,12 +17,19 @@ var TestCreatePost = React.createClass({
       url: Routes.comments_path({format: 'json'}),
       success: function(data) {
         console.log(data);
-        that.props.addComment(data, parentCommentKey);
-        that.setState({
-          focused: false
-        });
-        that.handleDiscardClick();
-        console.log("added comment");
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          console.log("added comment: " + data);
+          that.setState({
+            focused: false
+          });
+          that.handleDiscardClick();
+        };
+      },
+      error: function() {
+        console.log("error!")
       }
     })
   },
@@ -206,12 +213,19 @@ var TestReplyPost = React.createClass({
       url: Routes.comments_path({format: 'json'}),
       success: function(data) {
         console.log(data);
-        that.props.addComment(data, parentCommentKey);
-        that.setState({
-          focused: false
-        });
-        that.handleDiscardClick();
-        console.log("added comment");
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          console.log("added comment: " + data);
+          that.setState({
+            focused: false
+          });
+          that.handleDiscardClick();
+        };
+      },
+      error: function() {
+        console.log("error!")
       }
     })
   },

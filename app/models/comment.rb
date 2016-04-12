@@ -8,6 +8,7 @@ class Comment < ActiveRecord::Base
   validates :content_type, inclusion: { in: %w(picture text video link) }
 
   scope :replies, -> (parent_comment_id) { where(parent_comment_id: parent_comment_id) }
+  scope :my_comments, -> (user_id) { where(user_id: user_id) }
 
   scope :all_comments, -> { where(parent_comment_id: nil) }
   scope :all_replies, -> { where("parent_comment_id IS NOT NULL") }

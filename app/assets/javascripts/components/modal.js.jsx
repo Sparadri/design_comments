@@ -114,8 +114,8 @@ var TestModalInt = React.createClass({
       content : {
         position                   : 'absolute',
         top                        : '40px',
-        left                       : '25%',
-        right                      : '25%',
+        left                       : '5%',
+        right                      : '5%',
         bottom                     : '40px',
         border                     : '1px solid #ccc',
         background                 : '#fff',

@@ -3,7 +3,21 @@ class PagesController < ApplicationController
     # for jbuilder, making accessible variables
     @global_stats = get_global_stats
     @current_user = get_current_user_info
-    @items        = generate_items_hash
+    comments      = all_comments
+    @items        = generate_items_hash(comments)
+  end
+
+  def my_activity
+    current_user ? comments = my_comments : comments = []
+    items         = generate_items_hash(comments)
+    render json: items
+  end
+
+  def best_article
+    p "best_article"
+    comments      = all_comments
+    items         = generate_items_hash(comments)
+    render json: items
   end
 
   def test
@@ -55,8 +69,7 @@ class PagesController < ApplicationController
     end
   end
 
-  def generate_items_hash
-    comments     = generate_ordered_comment_array
+  def generate_items_hash(comments)
     ads          = generate_ad_array
     comment_hash = {}
     ad_index     = 0
@@ -111,8 +124,17 @@ class PagesController < ApplicationController
     }
   end
 
-  def generate_ordered_comment_array
+  def all_comments
     comments = Comment.order(created_at: :desc)
+    generate_ordered_comment_array(comments)
+  end
+
+  def my_comments
+    comments = Comment.my_comments(current_user[:id])
+    generate_ordered_comment_array(comments)
+  end
+
+  def generate_ordered_comment_array(comments)
     unordered_comment_array = []
     ordered_comment_array   = []
     comments.all.each do |comment|

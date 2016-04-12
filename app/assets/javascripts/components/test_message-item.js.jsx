@@ -1,12 +1,12 @@
 var TestMessageItem = React.createClass({
   getInitialState() {
     return {
-      currentLastReplyNumber: 1003,
+      currentLastReplyNumber: 1002,
       isHovered: false
     };
   },
   handleViewMoreClick: function() {
-    var currentLastReplyNumber = this.state.currentLastReplyNumber + 3;
+    var currentLastReplyNumber = this.state.currentLastReplyNumber + 2;
     this.setState({currentLastReplyNumber: currentLastReplyNumber});
   },
   onMouseOver: function() {

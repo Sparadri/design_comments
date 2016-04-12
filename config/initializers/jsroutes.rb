@@ -8,6 +8,8 @@ JsRoutes.setup do |config|
     /^comments$/,
     /^comment$/,
     /^delete_comment$/,
-    /^like_comment$/
+    /^like_comment$/,
+    /^my_activity$/,
+    /^best_article$/
   ]
 end

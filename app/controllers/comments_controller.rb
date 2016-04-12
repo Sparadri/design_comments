@@ -1,16 +1,19 @@
 class CommentsController < ApplicationController
 
   def create
-    comment = Comment.new(comments_params)
-    # current_user is given twice > once here & once in the app.js when updating state
-    comment.content_type = "text"
-    comment.user         = current_user
-    comment.save
-
-    comment_hash    = generate_comment_hash(comment, {})
-
-    # should not render full JSON but only what's needed
-    render json: comment_hash
+    if current_user
+      p "you are signed in & can comment"
+      comment = Comment.new(comments_params)
+      # current_user is given twice > once here & once in the app.js when updating state
+      comment.content_type = "text"
+      comment.user         = current_user
+      comment.save
+      comment_hash    = generate_comment_hash(comment, {})
+      # should not render full JSON but only what's needed
+      render json: comment_hash
+    else
+      render json: ["user not logged"]
+    end
   end
 
   def update
@@ -29,9 +32,8 @@ class CommentsController < ApplicationController
     before_likes = comment.get_likes.length
     before_dislikes = comment.get_dislikes.length
 
-    p "params: "
-    p like    = comments_params[:likeChange].to_i
-    p dislike = comments_params[:dislikeChange].to_i
+    like    = comments_params[:likeChange].to_i
+    dislike = comments_params[:dislikeChange].to_i
 
     comment.unliked_by    current_user if like == -1
     comment.liked_by      current_user if like == 1
@@ -57,29 +59,37 @@ class CommentsController < ApplicationController
 
 end
 
+
+
+# able to create comments even if nil
+# to be changed: save
+
+
+
+# view more comments
+# only show top 2
+# add parameters to show
+
+# faire un tableau des fctionnalités de moderation que je souhaite développer
+
+#
+#
 # to do list
 #
 # sorting comments > create arrays
 # add example comment but do no record in database
-#
-#
+
 # add in table > is_verified user
 # REVIEW ALL CODE
 # REDO MODAL
+
 # do tabs on top >  best / all / my comments / my interactions
 # in ppt, a comment summarizes an article
-
 # record likes // dislikes in database
-# allow posting from unknown & erase on refresh
-
 # CHECK DISCOURSE TEXT INPUTS
 # RECUPERER DU CODE DISCOURSE!!!
 # exemple locales: https://github.com/discourse/discourse/blob/9f30a28a8e850ff3e35d7ed240687d987d33e197/config/locales/client.fr.yml
-
-
 # open graph parser
-
-# show only some messages & view more on click
 
 # linkState to work :)
 # add medium editor & / or redactor-js & medium-insert on rails assets
@@ -92,7 +102,6 @@ end
 # componentWillMount for animation css comment pluggin loading
 # fix time / hours
 # add picture when person types his message (or when review?)
-# add sponsored comment example?
 
 # issue of likes / dislikes not working when replying
 # display first + highlight post from a specific user

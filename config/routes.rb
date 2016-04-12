@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   get 'comments/update'
   delete  'comments/:id', to: 'comments#delete', as: :delete_comment
   post 'comments/like', to: 'comments#like', as: :like_comment
+  post 'pages/my_activity', to: 'pages#my_activity', as: :my_activity
+  post 'pages/best_article', to: 'pages#best_article', as: :best_article
 
   devise_for :users
   root to: 'pages#home'

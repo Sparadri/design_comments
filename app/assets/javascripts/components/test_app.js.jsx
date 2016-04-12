@@ -7,6 +7,36 @@ var TestApp = React.createClass({
       modalIsOpen: false
     };
   },
+  retrieveMyActivity: function() {
+    var that = this;
+    $.ajax({
+      type: 'POST',
+      data: {},
+      url: Routes.my_activity_path({format: 'json'}),
+      success: function(data) {
+        console.log(data);
+        that.setState({ comments: data });
+      },
+      error: function() {
+        console.log("error!")
+      }
+    })
+  },
+  retrieveBestArticle: function() {
+    var that = this;
+    $.ajax({
+      type: 'POST',
+      data: {},
+      url: Routes.best_article_path({format: 'json'}),
+      success: function(data) {
+        console.log(data);
+        that.setState({ comments: data });
+      },
+      error: function() {
+        console.log("error!")
+      }
+    })
+  },
   addComment: function(data, parentCommentKey){
     var comments  = this.state.comments;
     var keys      = Object.keys(comments).map(function(x){ return parseInt(x); });
@@ -42,7 +72,9 @@ var TestApp = React.createClass({
                   parentCommentId = {null}
                   currentComment  = {this.state.currentComment}
                   addComment      = {this.addComment} />
-                <TestMessageTab/>
+                <TestMessageTab
+                  retrieveMyActivity  = {this.retrieveMyActivity}
+                  retrieveBestArticle = {this.retrieveBestArticle}/>
                 <TestMessagesList
                   addComment  = {this.addComment}
                   ads         = {this.state.ads}

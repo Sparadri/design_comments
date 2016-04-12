@@ -168,7 +168,7 @@
     background-color: white;
     cursor: text;
     color: #B1A9A9;
-    min-height: 200px;
+    min-height: 150px;
     .text-area {
       border: none;
       width: 100%;
@@ -456,7 +456,6 @@
 
   .discussion-stats {
     background-color: #FDFDFD;
-    border-top: 2px solid #A39ECA;
     border-bottom: 1px solid $gray-lighter;
     padding: 10px 21px 5px 15px;
     color: #898998;
@@ -657,6 +656,7 @@
   box-shadow: 1px 2px #EAEAEA;
   .item {
     flex-grow: 1;
+    position: relative;
     border-right: 1px solid rgb(185, 190, 195);
     background-color: #F2F4F6;
     padding: 6px 0px;
@@ -668,6 +668,23 @@
     font-size: 0.8em;
     text-align: center;
     transition: all 0.2s ease;
+    display: flex;
+    flex-flow: row;
+    &.focused {
+      background-color: rgba(190, 190, 195, 0.31);
+      color: #A29CA1;
+    }
+  }
+  .title {
+    flex-grow: 1;
+  }
+  i {
+    padding: 0px 9px 0px 0px;
+    align-self: center;
+    transition: all 0.2s ease;
+    &:hover {
+      color: $gray-dark;
+    }
   }
   .item:hover {
     background-color: rgba(190, 190, 195, 0.31);

@@ -5,6 +5,9 @@ var TestMessagesList = React.createClass({
       comments: this.props.comments
     };
   },
+  componentWillReceiveProps(newProps){
+    this.setState({comments: newProps.comments})
+  },
   deleteComment: function(commentId, commentKey) {
     var that = this;
     $.ajax({

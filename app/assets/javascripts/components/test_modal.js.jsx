@@ -24,7 +24,7 @@ var TestModalInt = React.createClass({
     var rawText    = this.state.rawText;
     var that       = this;
     var parentCommentKey = this.props.parentCommentKey;
-    var parentCommentId = that.props.parentCommentId;
+    var parentCommentId  = that.props.parentCommentId;
     $.ajax({
       type: 'POST',
       data: {comment: { content: richText, parent_comment_id: parentCommentId}},
@@ -155,8 +155,8 @@ var TestModalInt = React.createClass({
       content : {
         position                   : 'absolute',
         top                        : '40px',
-        left                       : '25%',
-        right                      : '25%',
+        left                       : '5%',
+        right                      : '5%',
         bottom                     : '40px',
         border                     : '1px solid #ccc',
         background                 : '#fff',
