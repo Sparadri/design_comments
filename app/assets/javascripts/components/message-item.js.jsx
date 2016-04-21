@@ -1,40 +1,61 @@
 var MessageItem = React.createClass({
   getInitialState() {
     return {
-      currentLastReplyNumber: 1003
+      currentLastReplyNumber: 1002,
+      isHovered: false
     };
   },
   handleViewMoreClick: function() {
-    var currentLastReplyNumber = this.state.currentLastReplyNumber + 3;
+    var currentLastReplyNumber = this.state.currentLastReplyNumber + 2;
     this.setState({currentLastReplyNumber: currentLastReplyNumber});
+  },
+  onMouseOver: function() {
+    this.setState({isHovered: true})
+  },
+  onMouseLeave: function() {
+    this.setState({isHovered: false})
   },
   render: function() {
     return (
-      <div>
-        <MessageItemHeader
-          commentKey     = {this.props.commentKey}
-          deleteComment  = {this.props.deleteComment}
-          comment        = {this.props.comment}
-          created_at     = {this.props.comment.created_at}
-          user           = {this.props.user}
-          avatar_url     = {this.props.user.avatar_url}/>
-        <MessageItemContent content={this.props.comment.content} />
-        <MessageItemSocial
-          commentId      = {this.props.comment.id}
-          likeCount      = {this.props.votes.like_count}
-          dislikeCount   = {this.props.votes.dislike_count}
-          fbShareCount   = {this.props.comment.fb_share_count}
-          isLiked        = {this.props.votes.is_liked}
-          isDisliked     = {this.props.votes.is_disliked}
-          replyCount     = {Object.keys(this.props.replies).length} />
+      <div onMouseOver={this.onMouseOver} onMouseLeave={this.onMouseLeave}>
+        <div className="message-item">
+          <div className="header-content">
+            <MessageItemHeader
+              isHovered     = {this.state.isHovered}
+              commentKey    = {this.props.commentKey}
+              deleteComment = {this.props.deleteComment}
+              comment       = {this.props.comment}
+              created_at    = {this.props.comment.created_at}
+              user          = {this.props.user}
+              avatar_url    = {this.props.user.avatar_url} />
+            <MessageItemContent
+              content      = {this.props.comment.content}
+              commentId    = {this.props.comment.id}
+              likeCount    = {this.props.votes.like_count}
+              dislikeCount = {this.props.votes.dislike_count}
+              fbShareCount = {this.props.comment.fb_share_count}
+              isLiked      = {this.props.votes.is_liked}
+              isDisliked   = {this.props.votes.is_disliked}
+              replyCount   = {Object.keys(this.props.replies).length} />
+          </div>
+          <MessageItemSocial
+            isHovered     = {this.state.isHovered}
+            commentId     = {this.props.comment.id}
+            likeCount     = {this.props.votes.like_count}
+            dislikeCount  = {this.props.votes.dislike_count}
+            fbShareCount  = {this.props.comment.fb_share_count}
+            isLiked       = {this.props.votes.is_liked}
+            isDisliked    = {this.props.votes.is_disliked}
+            replyCount    = {Object.keys(this.props.replies).length} />
+        </div>
         <MessageReplyList
           replies                 = {this.props.replies}
           handleViewMoreClick     = {this.handleViewMoreClick}
-          currentLastReplyNumber  = {this.state.currentLastReplyNumber}  />
+          currentLastReplyNumber  = {this.state.currentLastReplyNumber} />
         <ReplyForm
-          parentCommentKey= {this.props.commentKey}
-          addComment      = {this.props.addComment}
-          parentCommentId = {this.props.comment.id} />
+          parentCommentKey = {this.props.commentKey}
+          addComment       = {this.props.addComment}
+          parentCommentId  = {this.props.comment.id} />
       </div>
     );
   }
@@ -78,12 +99,11 @@ var MessageReplyList = React.createClass({
     };
   },
   render: function() {
-    ReplyListTopBorder = classNames({
-      "reply-list-top-border": Object.keys(this.props.replies).length > 0
+    messageReplyList = classNames({
+      "message-reply-list": this.state.numberReplies > 0
     });
     return (
-      <div>
-        <div className={ReplyListTopBorder}></div>
+      <div className={messageReplyList}>
         {Object.keys(this.props.replies).map(this.renderMessageReplies)}
       </div>
     )
@@ -174,8 +194,7 @@ var MessageReplies = React.createClass({
             <div className="name"> {this.props.user.first_name} </div>
             <div className="time"> {this.computeTime(this.props.created_at)} </div>
           </div>
-          <div className="reply-content-message" dangerouslySetInnerHTML={this.renderContent()}>
-          </div>
+          <div className="reply-content-message" dangerouslySetInnerHTML={this.renderContent()}></div>
         </div>
         <div className="reply-social-items">
           <div onClick={this.handleLike} className={likesClasses} ref="likes">
@@ -194,7 +213,7 @@ var MessageReplies = React.createClass({
 
 var MessageItemHeader = React.createClass({
   computeTime: function(timestamp) {
-    var time        = moment.duration(timestamp, 'milliseconds').humanize()
+    var time = moment.duration(timestamp, 'milliseconds').humanize()
     return time + " ago"
   },
   render: function() {
@@ -202,43 +221,84 @@ var MessageItemHeader = React.createClass({
       <div className="message-item-header">
         <img className="avatar-md avatar-bordered avatar-square" src={this.props.avatar_url} />
         <div className="details">
-          <div className="name"> {this.props.user.first_name} </div>
+          <div className="name"> {this.props.user.first_name}
+            <EditMessage
+              isHovered      = {this.props.isHovered}
+              commentKey     = {this.props.commentKey}
+              deleteComment  = {this.props.deleteComment}
+              messageId      = {this.props.comment.id}
+              isEditable     = {this.props.comment.is_editable}/>
+          </div>
           <div className="time"> {this.computeTime(this.props.created_at)} </div>
         </div>
-        <EditMessage
-          commentKey     = {this.props.commentKey}
-          deleteComment  = {this.props.deleteComment}
-          messageId      = {this.props.comment.id}
-          isEditable     = {this.props.comment.is_editable}/>
       </div>
     )
   }
 });
 
 var EditMessage = React.createClass({
+  getInitialState(){
+    return {
+      msgCtrlsVisible: false,
+      isHovered: this.props.isHovered
+    };
+  },
+  componentWillReceiveProps(nextProps) {
+      var isHovered = nextProps.isHovered;
+      this.setState({isHovered: isHovered})
+  },
   deleteComment: function(message) {
     var commentId  = this.props.messageId;
     var commentKey = this.props.commentKey;
     this.props.deleteComment(commentId, commentKey);
   },
   renderEdit: function() {
+    editMessage = classNames({
+      "edit-message": this.state.isHovered,
+      "fadeIn": this.state.isHovered,
+      "hidden": !this.state.isHovered
+    });
     if (this.props.isEditable) {
       return (
-        <div onClick={this.deleteComment}>
-          <i className="fa fa-trash"></i>
+        <div className={editMessage}>
+            <span className="hint hint--top hint--small hint--rounded hint--info hint--rounded" data-hint="Verified Commenters can leave comments without initial moderation. Verified status is earned based on a history of quality comments.">
+          <div className="message-ctrl-item certified" >
+              <i className="fa fa-check-circle"></i>
+          </div>
+            </span>
+          <div className="message-ctrl-item trash" onClick={this.deleteComment}>
+            <i className="fa fa-trash"></i>
+          </div>
+          <div className="message-ctrl-item share">
+            <i className="fa fa-share-alt"></i>
+          </div>
         </div>
       )
     } else {
       return (
-        <div>
-          <i className="fa fa-ban"></i>
+        <div className={editMessage}>
+          <div className="message-ctrl-item certified" >
+            <span className="hint hint--top hint--medium hint--rounded hint--success hint--rounded" data-hint="Verified Commenters can leave comments without initial moderation. Verified status is earned based on a history of quality comments.">
+              <i className="fa fa-check-circle"></i>
+            </span>
+          </div>
+          <div className="message-ctrl-item ban">
+            <span className="hint hint--top hint--medium hint--rounded hint--error hint--rounded" data-hint="Banned comments will be reviewed with dedication by the moderation team & removed in case the content is not relevant.">
+              <i className="fa fa-ban"></i>
+            </span>
+          </div>
+          <div className="message-ctrl-item share">
+            <span className="hint hint--top hint--medium hint--rounded hint--info hint--rounded" data-hint="Share best comments on Facebook & spread the word :)">
+              <i className="fa fa-share-alt"></i>
+            </span>
+          </div>
         </div>
       )
     };
   },
   render: function() {
     return (
-      <div className="edit-message">
+      <div >
         {this.renderEdit()}
       </div>
     )
@@ -252,7 +312,7 @@ var MessageItemContent = React.createClass({
   render: function() {
     return (
       <div className="message-item-content">
-        <div dangerouslySetInnerHTML={this.renderContent()} />
+        <div className="message-text" dangerouslySetInnerHTML={this.renderContent()} />
       </div>
     )
   }
@@ -266,8 +326,13 @@ var MessageItemSocial = React.createClass({
         isDisliked   : this.props.isDisliked,
         dislikeCount : this.props.dislikeCount,
         fbShareCount : this.props.fbShareCount,
-        replyCount   : this.props.replyCount
+        replyCount   : this.props.replyCount,
+        isHovered    : this.props.isHovered
     };
+  },
+  componentWillReceiveProps(nextProps) {
+      var isHovered = nextProps.isHovered;
+      this.setState({isHovered: isHovered})
   },
   recordSocialChange: function(like, dislike) {
     var commentId = this.props.commentId;
@@ -349,36 +414,32 @@ var MessageItemSocial = React.createClass({
   render: function() {
     likesClasses = classNames({
       "social-item" : true,
+      "darkened"    : this.state.isHovered && !this.state.isLiked,
       "is-liked"    : this.state.isLiked
     });
     dislikesClasses = classNames({
       "social-item" : true,
+      "darkened"    : this.state.isHovered && !this.state.isDisliked,
       "is-disliked" : this.state.isDisliked
+    });
+    socialItemWrapper = classNames({
+      "double-underlined": this.state.replyCount > 0,
+      "social-item-wrapper": true
     });
     return (
       <div className="message-item-social">
-        <div className="inside-interactions">
-          <div onClick={this.handleSocial.bind(this, "like")} className={likesClasses} ref="likes">
-            <i className="fa fa-thumbs-up"></i>
-            <span> Like </span>
-            <span> {this.state.likeCount} </span>
+        <div className={socialItemWrapper}>
+            <div className="inside-interactions">
+              <div onClick={this.handleSocial.bind(this, "like")} className={likesClasses} ref="likes">
+                <i className="fa fa-thumbs-up"></i>
+                <span> {this.state.likeCount} </span>
+              </div>
+              <div onClick={this.handleSocial.bind(this, "dislike")} className={dislikesClasses} ref="dislikes" >
+                <i className="fa fa-thumbs-down"></i>
+                <span> {this.state.dislikeCount} </span>
+              </div>
+            </div>
           </div>
-          <div onClick={this.handleSocial.bind(this, "dislike")} className={dislikesClasses} ref="dislikes" >
-            <i className="fa fa-thumbs-down"></i>
-            <span> Dislike </span>
-            <span> {this.state.dislikeCount} </span>
-          </div>
-        </div>
-        <div className="social-item">
-          <i className="fa fa-reply-all"></i>
-          <span> Replies </span>
-          <span> {this.state.replyCount} </span>
-        </div>
-        <div className="social-item">
-          <i className="fa fa-share-alt"></i>
-          <span> Share </span>
-          <span> {this.state.fbShareCount} </span>
-        </div>
       </div>
     )
   }
@@ -388,7 +449,7 @@ var ReplyForm = React.createClass({
   render: function() {
     return (
       <div className="reply-form">
-        <CreatePost
+        <ReplyPost
           parentCommentKey      = {this.props.parentCommentKey}
           addComment      = {this.props.addComment}
           parentCommentId = {this.props.parentCommentId} />

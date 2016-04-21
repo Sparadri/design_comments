@@ -17,12 +17,19 @@ var CreatePost = React.createClass({
       url: Routes.comments_path({format: 'json'}),
       success: function(data) {
         console.log(data);
-        that.props.addComment(data, parentCommentKey);
-        that.setState({
-          focused: false
-        });
-        that.handleDiscardClick();
-        console.log("added comment");
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          console.log("added comment: " + data);
+          that.setState({
+            focused: false
+          });
+          that.handleDiscardClick();
+        };
+      },
+      error: function() {
+        console.log("error!")
       }
     })
   },
@@ -186,3 +193,112 @@ var CreatePost = React.createClass({
   }
 });
 
+
+var ReplyPost = React.createClass({
+  getInitialState() {
+      return {
+        focused: false,
+        comments: this.props.comments
+      };
+  },
+  handleSubmit: function(){
+    var richText   = this.state.richText;
+    var rawText    = this.state.rawText;
+    var that       = this;
+    var parentCommentKey = this.props.parentCommentKey;
+    var parentCommentId = that.props.parentCommentId;
+    $.ajax({
+      type: 'POST',
+      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
+      url: Routes.comments_path({format: 'json'}),
+      success: function(data) {
+        console.log(data);
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          console.log("added comment: " + data);
+          that.setState({
+            focused: false
+          });
+          that.handleDiscardClick();
+        };
+      },
+      error: function() {
+        console.log("error!")
+      }
+    })
+  },
+  getName: function() {
+    var parentCommentKey = this.props.parentCommentKey;
+    that.props.comments[parentCommentKey];
+  },
+  handleKeyUp: function(e) {
+    var richText  = this.refs.replyPost.innerHTML;
+    var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
+    this.setState({richText: richText, rawText: rawText});
+    console.log("rich >> "+richText);
+    console.log("raw >> "+rawText);
+  },
+  handleClick: function() {
+    this.setState({ focused: true })
+  },
+  handleDiscardClick: function() {
+    this.setState({ focused: false });
+    this.refs.replyPost.innerHTML = '';
+  },
+  render: function() {
+    AddPostClasses = classNames({
+      "create-post" : !this.state.focused,
+      "hidden"      :  this.state.focused
+    });
+    CreatePostClasses = classNames({
+      "create-post" : this.state.focused,
+      "hidden"      : !this.state.focused
+    });
+    textareaClasses = classNames({
+      "text-area" : true,
+      "text-area" : true,
+      "editor"  : true,
+      "focused"   : this.state.focused
+    });
+    shareButton = classNames({
+      "share-button": true,
+    });
+    discardButton = classNames({
+      "discard-message": true,
+    });
+    createPostControls = classNames({
+      "reply-post-controls": true,
+      "hidden": !this.state.focused
+    });
+    // maxlength
+    // minlength
+    // placeholder
+    // required (boolean)
+    // spellcheck (boolean)
+    return (
+      <div>
+        <div className={AddPostClasses} onClick={this.handleClick} >
+          Reply to {}
+        </div>
+        <div className={CreatePostClasses}>
+          <div
+            contentEditable={true}
+            className={textareaClasses}
+            ref="replyPost"
+            onKeyUp={this.handleKeyUp}>
+        </div>
+          <div className={createPostControls}>
+            <div className="left-toolbar">
+            <div className={discardButton} onClick={this.handleDiscardClick}>
+              <i className="fa fa-trash"></i>
+            </div>
+            <div className={shareButton} onClick={this.handleSubmit}> Share now </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+});

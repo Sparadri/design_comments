@@ -1,15 +1,16 @@
-
-
-var TestModalInt = React.createClass({
+var ModalInt = React.createClass({
   getInitialState() {
     return {
-      modalIsOpen: this.props.isOpen
+      modalIsOpen: this.props.isOpen,
+      editorId: null
     };
   },
   componentWillReceiveProps(newProps){
     if (newProps.isOpen == true) {
       this.openModal();
     };
+  },
+  componentDidUpdate() {
   },
   openModal: function() {
     this.setState({modalIsOpen: true});
@@ -18,8 +19,39 @@ var TestModalInt = React.createClass({
     this.setState({modalIsOpen: false});
     // this.state.modalIsOpen
   },
-  handleContentClick: function() {
+  handleSubmit: function(){
+    var richText   = this.state.richText;
+    var rawText    = this.state.rawText;
+    var that       = this;
+    var parentCommentKey = this.props.parentCommentKey;
+    var parentCommentId  = that.props.parentCommentId;
+    $.ajax({
+      type: 'POST',
+      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
+      url: Routes.comments_path({format: 'json'}),
+      success: function(data) {
+        console.log(data);
+        that.props.addComment(data, parentCommentKey);
+        that.setState({
+          focused: false
+        });
+        that.handleDiscardClick();
+        console.log("added comment from module");
+      }
+    })
+  },
+  handleKeyUp: function(e) {
+    var html      = this.state.textEditor;
+    var editorId  = this.state.editorId;
+    var richText  = this.state.textEditor.serialize()[editorId]["value"];
+    var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
+    this.setState({richText: richText, rawText: rawText});
+    console.log("rich >> "+richText);
+    console.log("raw >> "+rawText);
+  },
+  instantiateEditor: function() {
     var editorId = "editor"+Math.round(Math.random()*10000);
+    console.log("modal editor id >> " + editorId);
     var textEditor = new MediumEditor('.editor', {
       toolbar: {
         buttons: [
@@ -73,22 +105,31 @@ var TestModalInt = React.createClass({
           hideOnClick: true
       }
     });
+    this.setState({textEditor: textEditor, editorId: editorId});
+  },
+  handleContentClick: function() {
+    if (this.state.editorId == null) {
+      this.instantiateEditor();
+    };
   },
   renderContent: function() {
     return {__html: this.props.currentComment};
   },
   renderModalContent: function() {
+    var that = this;
     return(
       <div className="modal-review">
         <i className="close fa fa-times" onClick={this.closeModal}></i>
         <h3 className="">Review your post before it goes live!</h3>
         <div className="gray-divider"></div>
         <div
+          id={this.state.editorId}
           className="modal-message-content editor"
           contentEditable="true"
-          onClick={this.handleContentClick()}
-          dangerouslySetInnerHTML={this.renderContent()}
-          id={this.state.editorId} />
+          onClick={this.handleContentClick}
+          onKeyUp={this.handleKeyUp}
+          dangerouslySetInnerHTML={this.renderContent()}>
+           </div>
         <div className="social-share">
           <div className="btn fb-share">
             Share on Facebook
@@ -126,17 +167,16 @@ var TestModalInt = React.createClass({
         padding                    : '20px'
       }
     };
-    // return(
-    //   <div>
-    //     <ReactModal
-    //         isOpen          = {this.state.modalIsOpen}
-    //         onRequestClose  = {this.closeModal}
-    //         closeTimeoutMS  = {100}
-    //         style           = {modalStyling} >
-    //         {this.renderModalContent()}
-    //     </ReactModal>
-    //   </div>
-    // )
+    return(
+      <div>
+        <ReactModal
+            isOpen          = {this.state.modalIsOpen}
+            onRequestClose  = {this.closeModal}
+            closeTimeoutMS  = {100}
+            style           = {modalStyling} >
+            {this.renderModalContent()}
+        </ReactModal>
+      </div>
+    )
   }
 });
-

@@ -2,7 +2,6 @@ class CommentsController < ApplicationController
 
   def create
     if current_user
-      p "you are signed in & can comment"
       comment = Comment.new(comments_params)
       # current_user is given twice > once here & once in the app.js when updating state
       comment.content_type = "text"
@@ -12,7 +11,13 @@ class CommentsController < ApplicationController
       # should not render full JSON but only what's needed
       render json: comment_hash
     else
-      render json: ["user not logged"]
+      comment = Comment.new(comments_params)
+      # current_user is given twice > once here & once in the app.js when updating state
+      comment.content_type = "text"
+      comment.user         = User.all[0]
+      comment_hash    = generate_comment_hash(comment, {})
+      # should not render full JSON but only what's needed
+      render json: comment_hash
     end
   end
 

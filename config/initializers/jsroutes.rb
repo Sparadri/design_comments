@@ -10,6 +10,7 @@ JsRoutes.setup do |config|
     /^delete_comment$/,
     /^like_comment$/,
     /^my_activity$/,
-    /^best_article$/
+    /^article$/,
+    /^all$/
   ]
 end

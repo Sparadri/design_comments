@@ -31,10 +31,9 @@ var AdItemContent = React.createClass({
       <div className="message-item-content">
         {this.props.content.title}
         <div className="ad-item-content">
-          <img src={this.props.content.picture} width="400px;"/>
+          <img src={this.props.content.picture} width="300px;"/>
         </div>
       </div>
     )
   }
 });
-

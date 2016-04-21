@@ -7,24 +7,25 @@ class PagesController < ApplicationController
     @items        = generate_items_hash(comments)
   end
 
+  def test
+  end
+
   def my_activity
     current_user ? comments = my_comments : comments = []
-    items         = generate_items_hash(comments)
+    items = generate_items_hash(comments)
     render json: items
   end
 
-  def best_article
-    p "best_article"
-    comments      = all_comments
-    items         = generate_items_hash(comments)
+  def article
+    comments = Comment.article(params[:article_id])
+    items    = generate_items_hash(comments)
     render json: items
   end
 
-  def test
-    # for jbuilder, making accessible variables
-    @global_stats = get_global_stats
-    @current_user = get_current_user_info
-    @items        = generate_items_hash
+  def all
+    comments = Comment.all
+    items    = generate_items_hash(comments)
+    render json: items
   end
 
   def vote

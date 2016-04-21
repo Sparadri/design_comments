@@ -5,6 +5,9 @@ var MessagesList = React.createClass({
       comments: this.props.comments
     };
   },
+  componentWillReceiveProps(newProps){
+    this.setState({comments: newProps.comments})
+  },
   deleteComment: function(commentId, commentKey) {
     var that = this;
     $.ajax({
@@ -23,11 +26,12 @@ var MessagesList = React.createClass({
     var currentLastCommentNumber = this.state.currentLastCommentNumber + 5;
     this.setState({currentLastCommentNumber: currentLastCommentNumber});
   },
+  // decides whether message to be displayed is an ad or a message
   renderMessageItem: function(key){
     var comments = this.state.comments;
     if (comments[key]["type"] == "comment") {
       return (
-        <div key={key} className="message-item-card">
+        <div key={key} className="apop-card">
           <MessageItem
             commentKey    = {key}
             deleteComment = {this.deleteComment}
@@ -40,7 +44,7 @@ var MessagesList = React.createClass({
       )
     } else {
       return (
-        <div key={key} className="message-item-card">
+        <div key={key} className="apop-card">
           <AdItem
             advertiser  = {comments[key].advertiser}
             content     = {comments[key].content} />
@@ -55,9 +59,24 @@ var MessagesList = React.createClass({
     var that     = this;
     return (
       <div>
-        {Object.keys(comments).map(this.renderMessageItem)} ;
+        <div className="load-modal">
+          <div className="sk-circle">
+            <div className="sk-circle1 sk-child"></div>
+            <div className="sk-circle2 sk-child"></div>
+            <div className="sk-circle3 sk-child"></div>
+            <div className="sk-circle4 sk-child"></div>
+            <div className="sk-circle5 sk-child"></div>
+            <div className="sk-circle6 sk-child"></div>
+            <div className="sk-circle7 sk-child"></div>
+            <div className="sk-circle8 sk-child"></div>
+            <div className="sk-circle9 sk-child"></div>
+            <div className="sk-circle10 sk-child"></div>
+            <div className="sk-circle11 sk-child"></div>
+            <div className="sk-circle12 sk-child"></div>
+          </div>
+        </div>
+        {Object.keys(comments).map(this.renderMessageItem)}
       </div>
     );
   }
 });
-

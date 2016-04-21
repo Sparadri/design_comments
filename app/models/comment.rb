@@ -12,4 +12,5 @@ class Comment < ActiveRecord::Base
 
   scope :all_comments, -> { where(parent_comment_id: nil) }
   scope :all_replies, -> { where("parent_comment_id IS NOT NULL") }
+  scope :article, -> (article_id) { where(article_id: article_id)}
 end
