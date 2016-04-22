@@ -6,6 +6,7 @@ var CreatePost = React.createClass({
       };
   },
   handleSubmit: function(){
+    // this.state.textEditor.destroy();
     var richText   = this.state.richText;
     var rawText    = this.state.rawText;
     var that       = this;
@@ -16,12 +17,10 @@ var CreatePost = React.createClass({
       data: {comment: { content: richText, parent_comment_id: parentCommentId}},
       url: Routes.comments_path({format: 'json'}),
       success: function(data) {
-        console.log(data);
         if (data[0] == "user not logged") {
           swal("Please login to comment!");
         } else {
           that.props.addComment(data, parentCommentKey);
-          console.log("added comment: " + data);
           that.setState({
             focused: false
           });
@@ -39,66 +38,11 @@ var CreatePost = React.createClass({
     var richText  = this.state.textEditor.serialize()[editorId]["value"];
     var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
     this.setState({richText: richText, rawText: rawText});
-    console.log("rich >> "+richText);
-    console.log("raw >> "+rawText);
   },
   handleClick: function() {
     var editorId = "editor"+Math.round(Math.random()*10000);
-    console.log(editorId);
-    var textEditor = new MediumEditor('.editor', {
-      toolbar: {
-        buttons: [
-          {
-            name: 'bold',
-            contentDefault: '<i class="fa fa-bold"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'italic',
-            contentDefault: '<i class="fa fa-italic"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'quote',
-            contentDefault: '<i class="fa fa-quote-left"></i>',
-            classList: ['medium-editor-custom', 'border-left']
-          },
-          {
-            name: 'anchor',
-            contentDefault: '<i class="fa fa-link"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'orderedlist',
-            contentDefault: '<i class="fa fa-list-ol"></i>',
-            classList: ['medium-editor-custom', 'border-left']
-          },
-          {
-            name: 'unorderedlist',
-            contentDefault: '<i class="fa fa-list-ul"></i>',
-            classList: ['medium-editor-custom']
-          }
-        ]
-      },
-      anchorPreview: {
-          /* These are the default options for anchor preview,
-             if nothing is passed this is what it used */
-          hideDelay: 500,
-          previewValueSelector: 'a'
-      },
-      diffLeft: 0,
-      diffTop: -10,
-      firstButtonClass: 'medium-editor-button-first',
-      lastButtonClass: 'medium-editor-button-last',
-      standardizeSelectionStart: false,
-      static: false,
-      relativeContainer: null,
-      placeholder: {
-          text: 'Express your Opinion',
-          hideOnClick: true
-      }
-    });
-    console.log(textEditor+' added');
+    var helper = new Helper;
+    var textEditor = helper.newMediumEditor();
     this.setState({
       focused: true,
       textEditor: textEditor,

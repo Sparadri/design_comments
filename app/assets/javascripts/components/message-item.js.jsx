@@ -91,9 +91,10 @@ var MessageReplyList = React.createClass({
             </div>
           </div>
            <MessageReplies
-            votes   = {replies[key].votes}
-            comment = {replies[key].comment}
-            user    = {replies[key].user} />
+            commentId = {replies[key].comment.id}
+            votes     = {replies[key].votes}
+            comment   = {replies[key].comment}
+            user      = {replies[key].user} />
         </div>
       )
     };
@@ -113,66 +114,38 @@ var MessageReplyList = React.createClass({
 var MessageReplies = React.createClass({
   getInitialState() {
     return {
-        isLiked   : this.props.votes.is_liked,
-        likes     : this.props.votes.like_count,
-        isDisliked: this.props.votes.is_disliked,
-        dislikes  : this.props.votes.dislike_count,
-        fb_share  : this.props.comment.fb_share_count
+        isLiked      : this.props.votes.is_liked,
+        likeCount    : this.props.votes.like_count,
+        isDisliked   : this.props.votes.is_disliked,
+        dislikeCount : this.props.votes.dislike_count,
+        fb_share     : this.props.comment.fb_share_count
     };
   },
-  handleLike: function(){
-    if (this.state.isLiked == false && this.state.isDisliked == true) {
-      this.setState({
-        isLiked   : true,
-        likes     : this.state.likes + 1,
-        isDisliked: false,
-        dislikes  : this.state.dislikes - 1
-      });
-    } else if (this.state.isLiked == false) {
-      this.setState({
-        isLiked: true,
-        likes: this.state.likes + 1
-      });
-    } else {
-      this.setState({
-        isLiked: false,
-        likes: this.state.likes - 1
-      });
-    }
+  recordSocialChange: function(like, dislike) {
+    var commentId = this.props.commentId;
+    $.ajax({
+      type: 'POST',
+      data: {comment: {id: this.props.commentId, likeChange: like, dislikeChange: dislike}},
+      url: Routes.like_comment_path({format: 'json'}),
+      success: function(data) {
+        console.log(data[0]);
+      }
+    });
   },
-  handleDislike: function(){
-    if (this.state.isDisliked == false && this.state.isLiked == true) {
-      this.setState({
-        isDisliked  : true,
-        dislikes    : this.state.dislikes + 1,
-        isLiked     : false,
-        likes       : this.state.likes - 1
-      });
-    } else if (this.state.isDisliked == false) {
-      this.setState({
-        isDisliked: true,
-        dislikes: this.state.dislikes + 1
-      });
-    } else {
-      this.setState({
-        isDisliked: false,
-        dislikes: this.state.dislikes - 1
-      });
-    }
+  handleSocial: function(type){
+    var that         = this;
+    var isLiked      = this.state.isLiked;
+    var isDisliked   = this.state.isDisliked;
+    var likeCount    = this.state.likeCount;
+    var dislikeCount = this.state.dislikeCount;
+    var helper       = new Helper;
+    this.setState(
+      helper.handleSocial(that, type, isLiked, isDisliked, likeCount, dislikeCount)
+    )
   },
-  computeTime: function(timestamp) {
-    var nbHours = moment(timestamp).startOf("hour").fromNow();
-    if (nbHours < 1) {                      // less than 1 hr ago
-      return ((moment().minutes(timestamp) - moment().minutes())+" ago")
-    } else if (nbHours < 12) {              // less than 12 hrs ago
-      return ( moment().startOf('day').fromNow() )
-    } else if (nbHours < 48) {              // less than 48 hrs ago
-      return ( moment(timestamp).calendar )
-    } else if (nbHours < 336) {             // less than 2 weeks ago
-      return ( moment(timestamp).format('LL') )
-    } else {
-      return ( moment(timestamp).format('LL') )
-    };
+  retrieveTime: function(date) {
+    var helper       = new Helper;
+    return(helper.retrieveTime(date));
   },
   renderContent: function() {
     return {__html: this.props.comment.content};
@@ -192,18 +165,18 @@ var MessageReplies = React.createClass({
         <div className="reply-content">
           <div className="details">
             <div className="name"> {this.props.user.first_name} </div>
-            <div className="time"> {this.computeTime(this.props.created_at)} </div>
+            <div className="time"> {this.retrieveTime(this.props.comment.created_at)} </div>
           </div>
           <div className="reply-content-message" dangerouslySetInnerHTML={this.renderContent()}></div>
         </div>
         <div className="reply-social-items">
-          <div onClick={this.handleLike} className={likesClasses} ref="likes">
+          <div onClick={this.handleSocial.bind(this, "like")} className={likesClasses} ref="likes">
             <i className="fa fa-thumbs-up"></i>
-            <span> {this.state.likes} </span>
+            <span> {this.state.likeCount} </span>
           </div>
-          <div onClick={this.handleDislike} className={dislikesClasses} ref="dislikes" >
+          <div onClick={this.handleSocial.bind(this, "dislike")} className={dislikesClasses} ref="dislikes" >
             <i className="fa fa-thumbs-down"></i>
-            <span> {this.state.dislikes} </span>
+            <span> {this.state.dislikeCount} </span>
           </div>
         </div>
       </div>
@@ -212,9 +185,9 @@ var MessageReplies = React.createClass({
 });
 
 var MessageItemHeader = React.createClass({
-  computeTime: function(timestamp) {
-    var time = moment.duration(timestamp, 'milliseconds').humanize()
-    return time + " ago"
+  retrieveTime: function(timestamp) {
+    var helper       = new Helper;
+    return(helper.retrieveTime(timestamp));
   },
   render: function() {
     return (
@@ -229,7 +202,7 @@ var MessageItemHeader = React.createClass({
               messageId      = {this.props.comment.id}
               isEditable     = {this.props.comment.is_editable}/>
           </div>
-          <div className="time"> {this.computeTime(this.props.created_at)} </div>
+          <div className="time"> {this.retrieveTime(this.props.comment.created_at)} </div>
         </div>
       </div>
     )
@@ -346,70 +319,15 @@ var MessageItemSocial = React.createClass({
     });
   },
   handleSocial: function(type){
+    var that         = this;
     var isLiked      = this.state.isLiked;
     var isDisliked   = this.state.isDisliked;
     var likeCount    = this.state.likeCount;
     var dislikeCount = this.state.dislikeCount;
-
-    if (!isLiked && isDisliked && type == "like") {
-      likeCount    += 1;
-      dislikeCount -= 1;
-      this.setState({
-        isLiked     : !isLiked,
-        likeCount   : likeCount,
-        isDisliked  : !isDisliked,
-        dislikeCount: dislikeCount
-      });
-      this.recordSocialChange(1, -1);
-    } else if (isLiked && !isDisliked && type == "dislike") {
-      likeCount    -= 1;
-      dislikeCount += 1;
-      this.setState({
-        isLiked     : !isLiked,
-        likeCount   : likeCount,
-        isDisliked  : !isDisliked,
-        dislikeCount: dislikeCount
-      });
-      this.recordSocialChange(-1, 1);
-    } else if (!isDisliked && type == 'like') {
-      isLiked ? forRecord = -1 : forRecord = 1;
-      isLiked ? likeCount -= 1 : likeCount += 1;
-      this.setState({
-        isLiked: !isLiked,
-        likeCount: likeCount
-      });
-      this.recordSocialChange(forRecord, 0);
-    } else if (!isLiked && type == 'dislike') {
-      isDisliked ? forRecord = -1 : forRecord = 1;
-      isDisliked ? dislikeCount -= 1 : dislikeCount += 1;
-      this.setState({
-        isDisliked: !isDisliked,
-        dislikeCount: dislikeCount
-      });
-      this.recordSocialChange(0, forRecord);
-    } else {
-      console.log("adrien")
-    }
-  },
-  handleDislike: function(){
-    if (this.state.isDisliked == false && this.state.isLiked == true) {
-      this.setState({
-        isDisliked    : true,
-        dislikeCount  : this.state.dislikeCount + 1,
-        isLiked       : false,
-        likeCount     : this.state.likeCount - 1
-      });
-    } else if (this.state.isDisliked == false) {
-      this.setState({
-        isDisliked  : true,
-        dislikeCount: this.state.dislikeCount + 1
-      });
-    } else {
-      this.setState({
-        isDisliked  : false,
-        dislikeCount: this.state.dislikeCount - 1
-      });
-    }
+    var helper       = new Helper;
+    this.setState(
+      helper.handleSocial(that, type, isLiked, isDisliked, likeCount, dislikeCount)
+    )
   },
   render: function() {
     likesClasses = classNames({

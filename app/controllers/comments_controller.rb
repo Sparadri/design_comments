@@ -32,28 +32,33 @@ class CommentsController < ApplicationController
   end
 
   def like
-    comment = Comment.find(comments_params[:id])
+    if current_user
+      comment = Comment.find(comments_params[:id])
 
-    before_likes = comment.get_likes.length
-    before_dislikes = comment.get_dislikes.length
+      before_likes = comment.get_likes.length
+      before_dislikes = comment.get_dislikes.length
 
-    like    = comments_params[:likeChange].to_i
-    dislike = comments_params[:dislikeChange].to_i
+      like    = comments_params[:likeChange].to_i
+      dislike = comments_params[:dislikeChange].to_i
 
-    comment.unliked_by    current_user if like == -1
-    comment.liked_by      current_user if like == 1
-    comment.disliked_by   current_user if dislike == 1
-    comment.undisliked_by current_user if dislike == -1
+      comment.unliked_by    current_user if like == -1
+      comment.liked_by      current_user if like == 1
+      comment.disliked_by   current_user if dislike == 1
+      comment.undisliked_by current_user if dislike == -1
 
-    after_likes = comment.get_likes.length
-    after_dislikes = comment.get_dislikes.length
+      after_likes = comment.get_likes.length
+      after_dislikes = comment.get_dislikes.length
 
-    success = ["comment: '#{comment.content}' liked,
-      before likes: #{before_likes},
-      after likes: #{after_likes},
-      before dislikes: #{before_dislikes},
-      after dislikes: #{after_dislikes}"]
-    render json: success
+      success = ["comment: '#{comment.content}' liked,
+        before likes: #{before_likes},
+        after likes: #{after_likes},
+        before dislikes: #{before_dislikes},
+        after dislikes: #{after_dislikes}"]
+      render json: success
+    else
+      error = ["user needs to be signed to upvote"]
+      render json: error
+    end
   end
 
   private

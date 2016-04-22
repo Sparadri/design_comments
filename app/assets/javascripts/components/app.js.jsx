@@ -57,12 +57,11 @@ var App = React.createClass({
     })
   },
   addComment: function(data, parentCommentKey){
-    console.log(data);
     var comments  = this.state.comments;
     var keys      = Object.keys(comments).map(function(x){ return parseInt(x); });
     var new_key   = String(Math.min.apply(null, keys) - 1);
 
-    var currentComment = data["comment"]["content"]
+    var richText = data["comment"]["content"]
 
     if (parentCommentKey == null) {
       comments[new_key] = data;
@@ -73,7 +72,7 @@ var App = React.createClass({
     this.setState({
       comments: comments,
       modalIsOpen: true,
-      currentComment: currentComment
+      richText: richText
     });
   },
   renderMessageList: function() {
@@ -105,12 +104,12 @@ var App = React.createClass({
     return (
       <div>
           <ModalInt
-            isOpen          = {this.state.modalIsOpen}
-            currentComment  = {this.state.currentComment} />
+            isOpen   = {this.state.modalIsOpen}
+            richText = {this.state.richText} />
           <SummaryStats global_stats= {this.props.global_stats} />
           <CreatePost
             parentCommentId = {null}
-            currentComment  = {this.state.currentComment}
+            richText        = {this.state.richText}
             addComment      = {this.addComment} />
           <MessageTab
             retrieveMyActivity  = {this.retrieveMyActivity}
