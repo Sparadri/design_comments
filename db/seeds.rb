@@ -54,10 +54,11 @@ controlled_content.length.times do
 
   # creates comment
   comment = Comment.create(
+    article_id: rand(0..1),
     content: controlled_content[i],
     user: user,
     content_type: "text",
-    created_at: Faker::Time.between(DateTime.now - 10, DateTime.now),
+    created_at: Faker::Time.between(10.days.ago, 2.days.ago, :all),
     like_count: (0..50).to_a.sample,
     dislike_count: (0..50).to_a.sample,
     fb_share_count: (0..10).to_a.sample
@@ -83,17 +84,18 @@ controlled_content.length.times do
   controlled_anwser << "Empower users should be at the heart of any website's strategy ;)"
 
   (1..6).to_a.sample.times do
-    answer = controlled_anwser.sample
+    answer  = controlled_anwser.sample
     controlled_anwser.delete(answer)
     reply = Comment.create(
       content: answer,
       user: User.all.sample,
       content_type: "text",
-      created_at: Faker::Time.between(DateTime.now - 10, DateTime.now),
+      created_at: Faker::Time.between(1.days.ago, Date.today, :all),
       like_count: (0..5).to_a.sample,
       dislike_count: (0..5).to_a.sample,
       fb_share_count: (5..15).to_a.sample,
-      parent_comment_id: comment.id
+      parent_comment_id: comment.id,
+      article_id: comment.article_id
     )
     p "#{reply.user.first_name}'s reply: #{reply.content} is created"
   end

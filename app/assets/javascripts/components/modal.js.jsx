@@ -1,83 +1,78 @@
-
-
-var TestModalInt = React.createClass({
+var ModalInt = React.createClass({
   getInitialState() {
     return {
-      modalIsOpen: this.props.isOpen
+      modalIsOpen: this.props.isOpen,
+      richText: this.props.richText,
+      isEditorInstantiated: false,
+      editorId: "modal-editor"
     };
   },
   componentWillReceiveProps(newProps){
-    if (newProps.isOpen == true) {
-      this.openModal();
-    };
+    if (newProps.isOpen) { this.openModal() };
+  },
+  componentDidUpdate() {
   },
   openModal: function() {
-    this.setState({modalIsOpen: true});
+    this.setState({modalIsOpen: true}, function() {
+      this.instantiateEditor();
+    }.bind(this));
   },
   closeModal: function() {
-    this.setState({modalIsOpen: false});
-    // this.state.modalIsOpen
+    this.setState({modalIsOpen: false, isEditorInstantiated: false});
+    this.state.textEditor.destroy();
   },
-  handleContentClick: function() {
-    var editorId = "editor"+Math.round(Math.random()*10000);
-    var textEditor = new MediumEditor('.editor', {
-      toolbar: {
-        buttons: [
-          {
-            name: 'bold',
-            contentDefault: '<i class="fa fa-bold"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'italic',
-            contentDefault: '<i class="fa fa-italic"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'quote',
-            contentDefault: '<i class="fa fa-quote-left"></i>',
-            classList: ['medium-editor-custom', 'border-left']
-          },
-          {
-            name: 'anchor',
-            contentDefault: '<i class="fa fa-link"></i>',
-            classList: ['medium-editor-custom']
-          },
-          {
-            name: 'orderedlist',
-            contentDefault: '<i class="fa fa-list-ol"></i>',
-            classList: ['medium-editor-custom', 'border-left']
-          },
-          {
-            name: 'unorderedlist',
-            contentDefault: '<i class="fa fa-list-ul"></i>',
-            classList: ['medium-editor-custom']
-          }
-        ]
+  instantiateEditor: function() {
+    var helper     = new Helper;
+    var textEditor = helper.newMediumEditor();
+    this.setState({textEditor: textEditor, isEditorInstantiated: true}, function(){
+        this.textInput();
+    }.bind(this));
+  },
+  textInput: function() {
+    var html      = this.state.textEditor;
+    var editorId  = this.state.editorId;
+    var richText  = html.serialize()[editorId]["value"];
+    var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
+    this.setState({richText: richText, rawText: rawText}, function(){
+        console.log(this.state.richText)
+    }.bind(this));
+  },
+  handleKeyUp: function(e) {
+    if (!this.state.isEditorInstantiated) {
+      this.instantiateEditor();
+    } else {
+      this.textInput();
+    };
+  },
+  publishPost: function() {
+      var richText         = this.state.richText;
+      var parentCommentId  = this.props.parentCommentId;
+      var parentCommentKey = this.props.parentCommentKey;
+      var that             = this;
+    $.ajax({
+      type: 'POST',
+      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
+      url: Routes.comments_path({format: 'json'}),
+      success: function(data) {
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          that.closeModal();
+          console.log(data);
+        };
       },
-      anchorPreview: {
-          /* These are the default options for anchor preview,
-             if nothing is passed this is what it used */
-          hideDelay: 500,
-          previewValueSelector: 'a'
-      },
-      diffLeft: 0,
-      diffTop: -10,
-      firstButtonClass: 'medium-editor-button-first',
-      lastButtonClass: 'medium-editor-button-last',
-      standardizeSelectionStart: false,
-      static: false,
-      relativeContainer: null,
-      placeholder: {
-          text: 'Express your Opinion',
-          hideOnClick: true
+      error: function() {
+        console.log("error!")
       }
-    });
+    })
+
   },
   renderContent: function() {
-    return {__html: this.props.currentComment};
+    return {__html: this.props.richText};
   },
   renderModalContent: function() {
+    var that = this;
     return(
       <div className="modal-review">
         <i className="close fa fa-times" onClick={this.closeModal}></i>
@@ -86,9 +81,10 @@ var TestModalInt = React.createClass({
         <div
           className="modal-message-content editor"
           contentEditable="true"
-          onClick={this.handleContentClick()}
+          onClick={this.handleContentClick}
+          onKeyUp={this.handleKeyUp}
           dangerouslySetInnerHTML={this.renderContent()}
-          id={this.state.editorId} />
+          id="modal-editor" />
         <div className="social-share">
           <div className="btn fb-share">
             Share on Facebook
@@ -97,7 +93,7 @@ var TestModalInt = React.createClass({
             Share on Twitter
           </div>
         </div>
-        <div className="share-button full-width" >VALIDATE & SHARE</div>
+        <div className="share-button full-width" onClick={this.publishPost}>VALIDATE & SHARE</div>
       </div>
     )
   },
@@ -126,17 +122,17 @@ var TestModalInt = React.createClass({
         padding                    : '20px'
       }
     };
-    // return(
-    //   <div>
-    //     <ReactModal
-    //         isOpen          = {this.state.modalIsOpen}
-    //         onRequestClose  = {this.closeModal}
-    //         closeTimeoutMS  = {100}
-    //         style           = {modalStyling} >
-    //         {this.renderModalContent()}
-    //     </ReactModal>
-    //   </div>
-    // )
+    return (
+      <div>
+        <ReactModal
+            editorId        = {this.state.editorId}
+            isOpen          = {this.state.modalIsOpen}
+            onRequestClose  = {this.closeModal}
+            closeTimeoutMS  = {100}
+            style           = {modalStyling} >
+            {this.renderModalContent()}
+        </ReactModal>
+      </div>
+    )
   }
 });
-

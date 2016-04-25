@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160323145609) do
+ActiveRecord::Schema.define(version: 20160414140408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20160323145609) do
     t.integer  "fb_share_count",    default: 0
     t.integer  "parent_comment_id"
     t.string   "content_type"
+    t.integer  "article_id"
   end
 
   create_table "users", force: :cascade do |t|

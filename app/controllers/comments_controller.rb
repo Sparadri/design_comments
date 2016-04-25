@@ -2,7 +2,6 @@ class CommentsController < ApplicationController
 
   def create
     if current_user
-      p "you are signed in & can comment"
       comment = Comment.new(comments_params)
       # current_user is given twice > once here & once in the app.js when updating state
       comment.content_type = "text"
@@ -12,7 +11,14 @@ class CommentsController < ApplicationController
       # should not render full JSON but only what's needed
       render json: comment_hash
     else
-      render json: ["user not logged"]
+      comment = Comment.new(comments_params)
+      # current_user is given twice > once here & once in the app.js when updating state
+      comment.content_type = "text"
+      comment.user         = User.all[0]
+      comment_hash         = generate_comment_hash(comment, {})
+      comment_hash[:comment][:created_at] = Time.now
+      # should not render full JSON but only what's needed
+      render json: comment_hash
     end
   end
 
@@ -27,28 +33,33 @@ class CommentsController < ApplicationController
   end
 
   def like
-    comment = Comment.find(comments_params[:id])
+    if current_user
+      comment = Comment.find(comments_params[:id])
 
-    before_likes = comment.get_likes.length
-    before_dislikes = comment.get_dislikes.length
+      before_likes = comment.get_likes.length
+      before_dislikes = comment.get_dislikes.length
 
-    like    = comments_params[:likeChange].to_i
-    dislike = comments_params[:dislikeChange].to_i
+      like    = comments_params[:likeChange].to_i
+      dislike = comments_params[:dislikeChange].to_i
 
-    comment.unliked_by    current_user if like == -1
-    comment.liked_by      current_user if like == 1
-    comment.disliked_by   current_user if dislike == 1
-    comment.undisliked_by current_user if dislike == -1
+      comment.unliked_by    current_user if like == -1
+      comment.liked_by      current_user if like == 1
+      comment.disliked_by   current_user if dislike == 1
+      comment.undisliked_by current_user if dislike == -1
 
-    after_likes = comment.get_likes.length
-    after_dislikes = comment.get_dislikes.length
+      after_likes = comment.get_likes.length
+      after_dislikes = comment.get_dislikes.length
 
-    success = ["comment: '#{comment.content}' liked,
-      before likes: #{before_likes},
-      after likes: #{after_likes},
-      before dislikes: #{before_dislikes},
-      after dislikes: #{after_dislikes}"]
-    render json: success
+      success = ["comment: '#{comment.content}' liked,
+        before likes: #{before_likes},
+        after likes: #{after_likes},
+        before dislikes: #{before_dislikes},
+        after dislikes: #{after_dislikes}"]
+      render json: success
+    else
+      error = ["user needs to be signed to upvote"]
+      render json: error
+    end
   end
 
   private
