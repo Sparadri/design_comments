@@ -8,6 +8,7 @@ var MessageTab = React.createClass({
     }
   },
   retrieveArticle: function() {
+    // provides article in db
     this.props.retrieveArticle(1);
     this.setState({retrieveArticle: true, retrieveAll: false, retrieveMyActivity: false, retrieveMyGroups: false});
     $(".load-modal").css("display", "flex");
