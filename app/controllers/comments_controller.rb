@@ -15,7 +15,8 @@ class CommentsController < ApplicationController
       # current_user is given twice > once here & once in the app.js when updating state
       comment.content_type = "text"
       comment.user         = User.all[0]
-      comment_hash    = generate_comment_hash(comment, {})
+      comment_hash         = generate_comment_hash(comment, {})
+      comment_hash[:comment][:created_at] = Time.now
       # should not render full JSON but only what's needed
       render json: comment_hash
     end

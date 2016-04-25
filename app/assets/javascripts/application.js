@@ -120,7 +120,7 @@ function Helper () {
     var nbHours   = Math.round(Math.abs(diffMs) / 36e5);
     var nbMinutes = Math.round(((diffMs % 86400000) % 3600000) / 60000);
     if (nbHours < 1) {                      // less than 1 hr ago
-      return (Math.round(((diffMs % 86400000) % 3600000) / 60000)+"minutes ago")
+      return ("less than "+Math.round(((diffMs % 86400000) % 3600000) / 60000 + 2)+" minutes ago")
     } else if (nbHours < 12) {              // less tùhan 12 hrs ago
       return ( moment(timestamp).startOf('day').fromNow() )
     } else if (nbHours < 48) {              // less than 48 hrs ago

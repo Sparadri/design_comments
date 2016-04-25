@@ -53,8 +53,8 @@ var MessageItem = React.createClass({
           handleViewMoreClick     = {this.handleViewMoreClick}
           currentLastReplyNumber  = {this.state.currentLastReplyNumber} />
         <ReplyForm
+          openModal        = {this.props.openModal}
           parentCommentKey = {this.props.commentKey}
-          addComment       = {this.props.addComment}
           parentCommentId  = {this.props.comment.id} />
       </div>
     );
@@ -368,9 +368,10 @@ var ReplyForm = React.createClass({
     return (
       <div className="reply-form">
         <ReplyPost
-          parentCommentKey      = {this.props.parentCommentKey}
-          addComment      = {this.props.addComment}
-          parentCommentId = {this.props.parentCommentId} />
+          openModal         = {this.props.openModal}
+          parentCommentKey  = {this.props.parentCommentKey}
+          addComment        = {this.props.addComment}
+          parentCommentId   = {this.props.parentCommentId} />
       </div>
     )
   }

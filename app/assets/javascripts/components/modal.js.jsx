@@ -8,48 +8,68 @@ var ModalInt = React.createClass({
     };
   },
   componentWillReceiveProps(newProps){
-    if (newProps.isOpen == true) {
-      this.openModal();
-    };
+    if (newProps.isOpen) { this.openModal() };
   },
   componentDidUpdate() {
   },
   openModal: function() {
-    this.setState({modalIsOpen: true});
+    this.setState({modalIsOpen: true}, function() {
+      this.instantiateEditor();
+    }.bind(this));
   },
   closeModal: function() {
-    this.setState({modalIsOpen: false});
+    this.setState({modalIsOpen: false, isEditorInstantiated: false});
+    this.state.textEditor.destroy();
+  },
+  instantiateEditor: function() {
+    var helper     = new Helper;
+    var textEditor = helper.newMediumEditor();
+    this.setState({textEditor: textEditor, isEditorInstantiated: true}, function(){
+        this.textInput();
+    }.bind(this));
   },
   textInput: function() {
     var html      = this.state.textEditor;
     var editorId  = this.state.editorId;
     var richText  = html.serialize()[editorId]["value"];
     var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
-    console.log("rich >> "+ richText);
-    console.log("raw >> " + rawText);
-    this.setState({richText: richText, rawText: rawText});
-    console.log(this.state.richText)
+    this.setState({richText: richText, rawText: rawText}, function(){
+        console.log(this.state.richText)
+    }.bind(this));
   },
   handleKeyUp: function(e) {
     if (!this.state.isEditorInstantiated) {
-      this.instantiateEditor(this.textInput);
-      this.setState({isEditorInstantiated: true});
+      this.instantiateEditor();
     } else {
       this.textInput();
     };
   },
-  instantiateEditor: function(callbackText) {
-    var helper = new Helper;
-    var textEditor = helper.newMediumEditor();
-    this.setState({textEditor: textEditor});
-    callbackText();
-    debugger;
+  publishPost: function() {
+      var richText         = this.state.richText;
+      var parentCommentId  = this.props.parentCommentId;
+      var parentCommentKey = this.props.parentCommentKey;
+      var that             = this;
+    $.ajax({
+      type: 'POST',
+      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
+      url: Routes.comments_path({format: 'json'}),
+      success: function(data) {
+        if (data[0] == "user not logged") {
+          swal("Please login to comment!");
+        } else {
+          that.props.addComment(data, parentCommentKey);
+          that.closeModal();
+          console.log(data);
+        };
+      },
+      error: function() {
+        console.log("error!")
+      }
+    })
+
   },
   renderContent: function() {
     return {__html: this.props.richText};
-  },
-  publishPost: function() {
-    this.setState({modalIsOpen: false});
   },
   renderModalContent: function() {
     var that = this;

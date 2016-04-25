@@ -3,7 +3,8 @@ var App = React.createClass({
   getInitialState() {
     return {
       comments: this.props.comments,
-      modalIsOpen: false
+      modalIsOpen: false,
+      newComment: {}
     };
   },
   componentDidMount() {
@@ -56,6 +57,17 @@ var App = React.createClass({
       }
     })
   },
+  openModal: function(richText, parentCommentKey, parentCommentId) {
+      this.setState({
+        newComment: {richText: richText, parentCommentKey: parentCommentKey, parentCommentId: parentCommentId},
+        modalIsOpen: true
+      }, function(){
+        this.setState({modalIsOpen: false})
+      })
+  },
+  closeModal: function(){
+    this.setState({modalIsopen: false})
+  },
   addComment: function(data, parentCommentKey){
     var comments  = this.state.comments;
     var keys      = Object.keys(comments).map(function(x){ return parseInt(x); });
@@ -69,11 +81,8 @@ var App = React.createClass({
       var parentCommentKey  = parentCommentKey.toString();
       comments[parentCommentKey].replies[new_key] = data;
     };
-    this.setState({
-      comments: comments,
-      modalIsOpen: true,
-      richText: richText
-    });
+    this.setState({comments: comments, newComment: {richText: ""}});
+    debugger;
   },
   renderMessageList: function() {
     var numberComments = Object.keys(this.state.comments).length;
@@ -92,7 +101,7 @@ var App = React.createClass({
           transitionAppearTimeout={200}>
           <div className="message-list">
             <MessagesList
-              addComment  = {this.addComment}
+              openModal   = {this.openModal}
               ads         = {this.state.ads}
               comments    = {this.state.comments} />
           </div>
@@ -104,12 +113,15 @@ var App = React.createClass({
     return (
       <div>
           <ModalInt
-            isOpen   = {this.state.modalIsOpen}
-            richText = {this.state.richText} />
+            closeModal      = {this.closeModal}
+            parentCommentId = {this.state.newComment['parentCommentId']}
+            richText        = {this.state.newComment['richText']}
+            addComment      = {this.addComment}
+            parentCommentKey= {this.state.newComment['parentCommentKey']}
+            isOpen          = {this.state.modalIsOpen}   />
           <SummaryStats global_stats= {this.props.global_stats} />
           <CreatePost
-            parentCommentId = {null}
-            richText        = {this.state.richText}
+            openModal       = {this.openModal}
             addComment      = {this.addComment} />
           <MessageTab
             retrieveMyActivity  = {this.retrieveMyActivity}

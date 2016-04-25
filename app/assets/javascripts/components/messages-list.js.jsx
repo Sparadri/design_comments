@@ -33,9 +33,9 @@ var MessagesList = React.createClass({
       return (
         <div key={key} className="apop-card">
           <MessageItem
+            openModal     = {this.props.openModal}
             commentKey    = {key}
             deleteComment = {this.deleteComment}
-            addComment    = {this.props.addComment}
             votes         = {comments[key].votes}
             comment       = {comments[key].comment}
             user          = {comments[key].user}

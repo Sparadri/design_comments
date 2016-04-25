@@ -12,25 +12,9 @@ var CreatePost = React.createClass({
     var that       = this;
     var parentCommentKey = this.props.parentCommentKey;
     var parentCommentId = that.props.parentCommentId;
-    $.ajax({
-      type: 'POST',
-      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
-      url: Routes.comments_path({format: 'json'}),
-      success: function(data) {
-        if (data[0] == "user not logged") {
-          swal("Please login to comment!");
-        } else {
-          that.props.addComment(data, parentCommentKey);
-          that.setState({
-            focused: false
-          });
-          that.handleDiscardClick();
-        };
-      },
-      error: function() {
-        console.log("error!")
-      }
-    })
+    this.props.openModal(richText, parentCommentKey, parentCommentId);
+    that.handleDiscardClick();
+    this.setState({focused: false});
   },
   handleKeyUp: function(e) {
     var html      = this.state.textEditor;
@@ -46,14 +30,15 @@ var CreatePost = React.createClass({
     this.setState({
       focused: true,
       textEditor: textEditor,
-      editorId: editorId
+      editorId: editorId,
+      richText: "",
+      rawText: ""
     })
   },
   handleDiscardClick: function() {
     this.setState({
       focused: false    // NOT WORKING???
     });
-
     this.refs.createPost.innerHTML = '';
   },
   render: function() {
@@ -146,50 +131,43 @@ var ReplyPost = React.createClass({
       };
   },
   handleSubmit: function(){
+    // this.state.textEditor.destroy();
     var richText   = this.state.richText;
     var rawText    = this.state.rawText;
     var that       = this;
     var parentCommentKey = this.props.parentCommentKey;
     var parentCommentId = that.props.parentCommentId;
-    $.ajax({
-      type: 'POST',
-      data: {comment: { content: richText, parent_comment_id: parentCommentId}},
-      url: Routes.comments_path({format: 'json'}),
-      success: function(data) {
-        console.log(data);
-        if (data[0] == "user not logged") {
-          swal("Please login to comment!");
-        } else {
-          that.props.addComment(data, parentCommentKey);
-          console.log("added comment: " + data);
-          that.setState({
-            focused: false
-          });
-          that.handleDiscardClick();
-        };
-      },
-      error: function() {
-        console.log("error!")
-      }
-    })
+    this.props.openModal(richText, parentCommentKey, parentCommentId);
+    that.handleDiscardClick();
+    this.setState({focused: false});
   },
   getName: function() {
     var parentCommentKey = this.props.parentCommentKey;
     that.props.comments[parentCommentKey];
   },
   handleKeyUp: function(e) {
-    var richText  = this.refs.replyPost.innerHTML;
+    var html      = this.state.textEditor;
+    var editorId  = this.state.editorId;
+    var richText  = this.state.textEditor.serialize()[editorId]["value"];
     var rawText   = richText.replace(/<[^>]*>/g, " ").replace(/\s\s+/g, ' ').replace("&nbsp;","");
     this.setState({richText: richText, rawText: rawText});
-    console.log("rich >> "+richText);
-    console.log("raw >> "+rawText);
   },
   handleClick: function() {
-    this.setState({ focused: true })
+    var editorId = "editor"+Math.round(Math.random()*10000);
+    var helper = new Helper;
+    var textEditor = helper.newMediumEditor();
+    this.setState({
+      focused: true,
+      textEditor: textEditor,
+      editorId: editorId,
+      richText: "",
+      rawText: ""
+    })
   },
   handleDiscardClick: function() {
-    this.setState({ focused: false });
-    this.refs.replyPost.innerHTML = '';
+    this.setState({
+      focused: false    // NOT WORKING???
+    });
   },
   render: function() {
     AddPostClasses = classNames({
@@ -228,6 +206,7 @@ var ReplyPost = React.createClass({
         </div>
         <div className={CreatePostClasses}>
           <div
+            id={this.state.editorId}
             contentEditable={true}
             className={textareaClasses}
             ref="replyPost"
