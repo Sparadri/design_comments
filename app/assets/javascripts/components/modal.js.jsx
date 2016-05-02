@@ -112,7 +112,7 @@ var ModalInt = React.createClass({
         top                        : '40px',
         left                       : '5%',
         right                      : '5%',
-        bottom                     : '40px',
+        height                     : '80vh',
         border                     : '1px solid #ccc',
         background                 : '#fff',
         overflow                   : 'auto',

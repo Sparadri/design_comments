@@ -32,6 +32,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-react-dom'
   gem 'rails-assets-quill'
   gem 'rails-assets-react-modal'
+  gem 'rails-assets-share-button'
 end
 
 

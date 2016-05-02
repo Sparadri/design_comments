@@ -138,6 +138,7 @@ GEM
     rails-assets-quill (0.20.1)
     rails-assets-react-dom (0.1.0)
     rails-assets-react-modal (0.6.1)
+    rails-assets-share-button (1.0.3)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)
@@ -227,6 +228,7 @@ DEPENDENCIES
   rails-assets-quill!
   rails-assets-react-dom!
   rails-assets-react-modal!
+  rails-assets-share-button!
   rails_12factor
   react-rails (= 1.6.1)
   redis

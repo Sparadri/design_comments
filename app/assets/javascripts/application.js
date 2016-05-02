@@ -10,6 +10,7 @@
 //= require sweet-alert
 //= require medium-editor
 //= require components
+//= require share-button
 //= require_tree .
 
 function Helper () {
