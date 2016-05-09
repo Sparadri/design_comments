@@ -11,6 +11,7 @@
 //= require medium-editor
 //= require components
 //= require share-button
+//= require social-share-kit.min.js
 //= require_tree .
 
 function Helper () {

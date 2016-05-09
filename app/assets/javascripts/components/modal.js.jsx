@@ -8,9 +8,38 @@ var ModalInt = React.createClass({
     };
   },
   componentWillReceiveProps(newProps){
-    if (newProps.isOpen) { this.openModal() };
+    if (newProps.isOpen) {
+      this.openModal()
+      SocialShareKit.init({
+        selector: '.custom-parent .ssk',
+        url: 'http://my-url',
+        text: 'Share text default',
+        twitter: {
+            url: 'http://url-for-twitter',
+            text: 'Share text for twitter',
+            via: 'twitter-screen-name',
+            countCallback: function(shareUrl, onCountReady) {
+                // Get count somewhere manually and call onCountReady() whenever you got the count.
+                var count = 5;
+                return onCountReady(count);
+            }
+        },
+        facebook: {
+            url: 'www.apop.io',
+            text: 'Share text for twitter',
+            via: 'twitter-screen-name',
+            countCallback: function(shareUrl, onCountReady) {
+                // Get count somewhere manually and call onCountReady() whenever you got the count.
+                var count = 5;
+                return onCountReady(count);
+            }
+        },
+      });
+      console.log("init 2")
+
+    };
   },
-  componentDidUpdate() {
+  componentDidMount() {
   },
   openModal: function() {
     this.setState({modalIsOpen: true}, function() {
@@ -71,6 +100,7 @@ var ModalInt = React.createClass({
   renderContent: function() {
     return {__html: this.props.richText};
   },
+
   renderModalContent: function() {
     var that = this;
     return(
@@ -85,14 +115,13 @@ var ModalInt = React.createClass({
           onKeyUp={this.handleKeyUp}
           dangerouslySetInnerHTML={this.renderContent()}
           id="modal-editor" />
-        <div className="social-share">
-          <div className="btn fb-share">
-            Share on Facebook
-          </div>
-          <div className="btn twitr-share">
-            Share on Twitter
+        <div className="custom-parent">
+          <div className="ssk-group social-share">
+              <a href="javascript:void(0)" className="ssk ssk-facebook btn fb-share">Facebook</a>
+              <a href="javascript:void(0)" className="ssk ssk-twitter btn twitr-share">Twitter</a>
           </div>
         </div>
+
         <div className="share-button full-width" onClick={this.publishPost}>VALIDATE & SHARE</div>
       </div>
     )

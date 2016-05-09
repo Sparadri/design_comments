@@ -6,131 +6,23 @@
 
 
 
-<%= react_component "App",
+<%=  react_component "App",
           render(template: 'pages/home.json.jbuilder') %>
 
 
 
 
 
+<!-- <div className="social-share">
+          <div className="btn fb-share">
+            Share on Facebook
+          </div>
+          <div className="btn twitr-share">
+            Share on Twitter
+          </div>
+        </div> -->
 
 
 
 
 
-
-
-
-
-
-
-
-<!-- <share-button class="share-buttoon fb" style="margin-left: 200px;">adrien</share-button>
-<share-button class="share-buttoon all" style="margin-left: 200px;">adrien</share-button>
-
-<div class="sb-social sb-top sb-center networks-7 active"><ul><li class="pinterest enabled" data-network="pinterest"><a onclick="return false"></a></li><li class="twitter enabled" data-network="twitter"><a onclick="return false"></a></li><li class="facebook enabled" data-network="facebook"><a onclick="return false"></a></li><li class="whatsapp disabled" data-network="whatsapp"><a onclick="return false"></a></li><li class="googlePlus enabled" data-network="googlePlus"><a onclick="return false"></a></li><li class="reddit enabled" data-network="reddit"><a onclick="return false"></a></li><li class="linkedin enabled" data-network="linkedin"><a onclick="return false"></a></li><li class="email enabled" data-network="email"><a onclick="return false"></a></li></ul></div>
-
-
-
-<share-button class="share-buttoon all sharer-0 active" style="margin-left: 200px; display: initial;">share<div class="sb-social sb-top sb-center networks-7 active"><ul><li class="pinterest enabled" data-network="pinterest"><a onclick="return false"></a></li><li class="twitter enabled" data-network="twitter"><a onclick="return false"></a></li><li class="facebook enabled" data-network="facebook"><a onclick="return false"></a></li><li class="whatsapp disabled" data-network="whatsapp"><a onclick="return false"></a></li><li class="googlePlus enabled" data-network="googlePlus"><a onclick="return false"></a></li><li class="reddit enabled" data-network="reddit"><a onclick="return false"></a></li><li class="linkedin enabled" data-network="linkedin"><a onclick="return false"></a></li><li class="email enabled" data-network="email"><a onclick="return false"></a></li></ul></div></share-button>
-
-
-
-<li class="pinterest enabled" data-network="pinterest"><a onclick="return false"></a></li>
-<% content_for(:after_js) do %>
-  <script>
-
-
-var config = {
-  url: "wwww.apop.io",        // the url you'd like to share. [Default: `window.location.href`]
-  title: "title",       // title to be shared alongside your link [Default: See below in defaults section]
-  description: "description", // text to be shared alongside your link, [Default: See below in defaults section]
-  image: "tbc",     // image to be shared [Default: See below in defaults section]
-  ui: {
-    button_font: true, // include the Lato font set from the Google Fonts API. [Default: `true`]
-    buttonText: "share", // change the text of the button, [Default: `Share`]
-    icon_font: true   // include the minified Entypo font set. [Default: `true`]
-  },
-  networks: {
-    googlePlus: {
-      enabled: true, // Enable Google+. [Default: true]
-      url: "wwww.apop.io"    // the url you'd like to share to Google+ [Default: config.url]
-    },
-    twitter: {
-      enabled: true,     // Enable Twitter. [Default: true]
-      url: "wwww.apop.io",      // the url you'd like to share to Twitter [Default: config.url]
-      description: "yeah!" // text to be shared alongside your link to Twitter [Default: config.description]
-    },
-    facebook: {
-      enabled: true,     // Enable Facebook. [Default: true]
-      load_sdk: true,    // Load the FB SDK. If false, it will default to Facebook's sharer.php implementation.
-                    // NOTE: This will disable the ability to dynamically set values and rely directly on applicable Open Graph tags.
-                    // [Default: true]
-      url: "wwww.apop.io",          // the url you'd like to share to Facebook [Default: config.url]
-      // appId:       // Facebook app id for tracking shares. if provided, will use the facebook API
-      title: "title",       // title to be shared alongside your link to Facebook [Default: config.title]
-      caption: null,     // caption to be shared alongside your link to Facebook [Default: null]
-      description: "description", // text to be shared alongside your link to Facebook [Default: config.description]
-      image: "config.image"       // image to be shared to Facebook [Default: config.image]
-    },
-    pinterest: {
-      enabled: true,     // Enable Pinterest. [Default: true]
-      url: "wwww.apop.io",          // the url you'd like to share to Pinterest [Default: config.url]
-      image: "config.image",        // image to be shared to Pinterest [Default: config.image]
-      description: "description" // text to be shared alongside your link to Pinterest [Default: config.description]
-    },
-    reddit: {
-      enabled: true, // Enable Reddit. [Default: true]
-      url: "wwww.apop.io",      // the url you'd like to share to Reddit [Default: config.url]
-      title: "title"   // title to be shared alongside your link to Reddit [Default: config.title]
-    },
-    linkedin: {
-      enabled: true,    // Enable LinkedIn. [Default: true]
-      url: "wwww.apop.io",          // the url you'd like to share to LinkedIn [Default: config.url]
-      title: "title",       // title to be shared alongside your link to LinkedIn [Default: config.title],
-      description: "desciption" // text to be shared alongside your link to LinkedIn [Default: config.description]
-    },
-    whatsapp: {
-      enabled: true,    // Enable WhatsApp. [Default: true]
-      description: "description", // text to be shared alongside your link to WhatsApp [Default: config.description],
-      url: "wwww.apop.io"          // the url you'd like to share to WhatsApp [Default: config.url]
-    },
-    email: {
-      enabled: true,    // Enable Email. [Default: true]
-      title: "title",       // the subject of the email [Default: config.title]
-      description: "description" // The body of the email [Default: config.description]
-    }
-  }
-}
-new ShareButton('.share-buttoon.all', config);
-
-var facebook_config = {
-  url: "wwww.apop.io",        // the url you'd like to share. [Default: `window.location.href`]
-  title: "title",       // title to be shared alongside your link [Default: See below in defaults section]
-  description: "description", // text to be shared alongside your link, [Default: See below in defaults section]
-  image: "tbc",     // image to be shared [Default: See below in defaults section]
-  ui: {
-    button_font: true, // include the Lato font set from the Google Fonts API. [Default: `true`]
-    buttonText: "share", // change the text of the button, [Default: `Share`]
-    icon_font: true   // include the minified Entypo font set. [Default: `true`]
-  },
-  networks: {
-    facebook: {
-      enabled: true,     // Enable Facebook. [Default: true]
-      load_sdk: true,    // Load the FB SDK. If false, it will default to Facebook's sharer.php implementation.
-                    // NOTE: This will disable the ability to dynamically set values and rely directly on applicable Open Graph tags.
-                    // [Default: true]
-      url: "wwww.apop.io",          // the url you'd like to share to Facebook [Default: config.url]
-      // appId:       // Facebook app id for tracking shares. if provided, will use the facebook API
-      title: "title",       // title to be shared alongside your link to Facebook [Default: config.title]
-      caption: null,     // caption to be shared alongside your link to Facebook [Default: null]
-      description: "description", // text to be shared alongside your link to Facebook [Default: config.description]
-      image: "config.image"       // image to be shared to Facebook [Default: config.image]
-    }
-  }
-}
-new ShareButton('.share-buttoon.fb', facebook_config);
-
-  </script>
-<% end %>
- -->
